@@ -9,31 +9,32 @@ public class Beneficiarios {
     @Id
     @Column(length = 12) // puedes ajustar el largo según tus necesidades
     private String rut;
-
     private String nombre;
-    private String apellidoPaterno;
-    private String apellidoMaterno;
+    private String apellido;
     private String fechaNacimiento;
     private String sexo;
     private String direccion;
     private String comuna;
     private String telefono;
+    private String correo;
+    private String documento;
 
     public Beneficiarios() {
         // Constructor vacío requerido por JPA
     }
 
-    public Beneficiarios(String rut, String nombre, String apellidoPaterno, String apellidoMaterno,
-                         String fechaNacimiento, String sexo, String direccion, String comuna, String telefono) {
+    public Beneficiarios(String rut, String nombre, String apellido,
+                         String fechaNacimiento, String sexo, String direccion, String comuna, String telefono, String correo, String documento) {
         this.rut = rut;
         this.nombre = nombre;
-        this.apellidoPaterno = apellidoPaterno;
-        this.apellidoMaterno = apellidoMaterno;
+        this.apellido=apellido;
         this.fechaNacimiento = fechaNacimiento;
         this.sexo = sexo;
         this.direccion = direccion;
         this.comuna = comuna;
         this.telefono = telefono;
+        this.correo=correo;
+        this.documento=documento;
     }
 
     // Getters y setters
@@ -54,21 +55,14 @@ public class Beneficiarios {
         this.nombre = nombre;
     }
 
-    public String getApellidoPaterno() {
-        return apellidoPaterno;
+    public String getApellido() {
+        return apellido;
     }
 
-    public void setApellidoPaterno(String apellidoPaterno) {
-        this.apellidoPaterno = apellidoPaterno;
+    public void setApellidoPaterno(String apellido) {
+        this.apellido = apellido;
     }
 
-    public String getApellidoMaterno() {
-        return apellidoMaterno;
-    }
-
-    public void setApellidoMaterno(String apellidoMaterno) {
-        this.apellidoMaterno = apellidoMaterno;
-    }
 
     public String getFechaNacimiento() {
         return fechaNacimiento;
@@ -108,5 +102,21 @@ public class Beneficiarios {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(String documento) {
+        this.documento = documento;
     }
 }

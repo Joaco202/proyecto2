@@ -18,11 +18,11 @@ public class ElementosListaPrecios {
     private Integer productoId;
 
     @Column(name = "precio", nullable = false)
-    private BigDecimal precio;
+    private Integer precio;
 
     public ElementosListaPrecios() {}
 
-    public ElementosListaPrecios(Integer listaPrecioId, Integer productoId, BigDecimal precio) {
+    public ElementosListaPrecios(Integer listaPrecioId, Integer productoId, Integer precio) {
         this.listaPrecioId = listaPrecioId;
         this.productoId = productoId;
         this.precio = precio;
@@ -48,11 +48,11 @@ public class ElementosListaPrecios {
         this.productoId = productoId;
     }
 
-    public BigDecimal getPrecio() {
+    public Integer getPrecio() {
         return precio;
     }
 
-    public void setPrecio(BigDecimal precio) {
+    public void setPrecio(Integer precio) {
         this.precio = precio;
     }
 
