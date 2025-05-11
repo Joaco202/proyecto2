@@ -34,10 +34,6 @@ public class CargasInventario {
     @Column(name = "fecha_carga")
     private LocalDateTime fechaCarga;
 
-    @ManyToOne
-    @JoinColumn(name = "usuario_id")
-    private Usuario usuario;
-
     public CargasInventario() {}
 
     public CargasInventario(Producto producto, Bodega bodega, BigDecimal cantidad, String tipoCarga, Usuario usuario) {

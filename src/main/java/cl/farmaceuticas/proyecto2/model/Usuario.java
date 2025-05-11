@@ -63,7 +63,6 @@ public class Usuario {
     public Usuario() {}
 
     public Usuario(String usuario, String claveHash, String nombre, String apellido, String correo, Rol rol) {
-    public Usuario(String usuario, String claveHash, String nombre, String apellido, String correo, Rol rol) {
         this.usuario = usuario;
         this.claveHash = claveHash;
         this.nombre = nombre;
@@ -114,14 +113,6 @@ public class Usuario {
 
     public void setCorreo(String correo) {
         this.correo = correo;
-    }
-
-    public Rol getRol() {
-        return rol;
-    }
-
-    public void setRol(Rol rol) {
-        this.rol = rol;
     }
 
     public LocalDateTime getFechaCreacion() {
