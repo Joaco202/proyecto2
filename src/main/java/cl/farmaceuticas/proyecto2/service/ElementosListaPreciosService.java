@@ -33,13 +33,14 @@ public class ElementosListaPreciosService {
     public ElementosListaPrecios update(Integer id, ElementosListaPrecios datos) {
         return repository.findById(id)
                 .map(existing -> {
-                    existing.setListaPrecioId(datos.getListaPrecioId());
-                    existing.setProductoId(datos.getProductoId());
+                    existing.setProducto(datos.getProducto());
+                    existing.setProducto(datos.getProducto());
                     existing.setPrecio(datos.getPrecio());
                     return repository.save(existing);
                 })
                 .orElseThrow(() -> new RuntimeException("Elemento no encontrado"));
     }
+
 
     public void delete(Integer id) {
         repository.deleteById(id);

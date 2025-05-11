@@ -1,8 +1,8 @@
 package cl.farmaceuticas.proyecto2.model;
+
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 
 @Entity
 @Table(name = "cargas_inventario")
@@ -13,11 +13,13 @@ public class CargasInventario {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "producto_id", nullable = false)
-    private Integer productoId;
+    @ManyToOne
+    @JoinColumn(name = "producto_id", nullable = false)
+    private Producto producto;
 
-    @Column(name = "bodega_id", nullable = false)
-    private Integer bodegaId;
+    @ManyToOne
+    @JoinColumn(name = "bodega_id", nullable = false)
+    private Bodega bodega;
 
     @Column(name = "cantidad", nullable = false)
     private BigDecimal cantidad;
@@ -28,38 +30,77 @@ public class CargasInventario {
     @Column(name = "fecha_carga")
     private LocalDateTime fechaCarga;
 
-    @Column(name = "usuario_id")
-    private Integer usuarioId;
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 
     public CargasInventario() {}
 
-    public CargasInventario(Integer productoId, Integer bodegaId, BigDecimal cantidad, String tipoCarga, Integer usuarioId) {
-        this.productoId = productoId;
-        this.bodegaId = bodegaId;
+    public CargasInventario(Producto producto, Bodega bodega, BigDecimal cantidad, String tipoCarga, Usuario usuario) {
+        this.producto = producto;
+        this.bodega = bodega;
         this.cantidad = cantidad;
         this.tipoCarga = tipoCarga;
-        this.usuarioId = usuarioId;
+        this.usuario = usuario;
     }
 
-    public Integer getId() { return id; }
-    public Integer getProductoId() { return productoId; }
-    public void setProductoId(Integer productoId) { this.productoId = productoId; }
-    public Integer getBodegaId() { return bodegaId; }
-    public void setBodegaId(Integer bodegaId) { this.bodegaId = bodegaId; }
-    public BigDecimal getCantidad() { return cantidad; }
-    public void setCantidad(BigDecimal cantidad) { this.cantidad = cantidad; }
-    public String getTipoCarga() { return tipoCarga; }
-    public void setTipoCarga(String tipoCarga) { this.tipoCarga = tipoCarga; }
-    public LocalDateTime getFechaCarga() { return fechaCarga; }
-    public Integer getUsuarioId() { return usuarioId; }
-    public void setUsuarioId(Integer usuarioId) { this.usuarioId = usuarioId; }
+    public Integer getId() {
+        return id;
+    }
+
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
+    public Bodega getBodega() {
+        return bodega;
+    }
+
+    public void setBodega(Bodega bodega) {
+        this.bodega = bodega;
+    }
+
+    public BigDecimal getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(BigDecimal cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public String getTipoCarga() {
+        return tipoCarga;
+    }
+
+    public void setTipoCarga(String tipoCarga) {
+        this.tipoCarga = tipoCarga;
+    }
+
+    public LocalDateTime getFechaCarga() {
+        return fechaCarga;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
     @Override
     public String toString() {
         return String.format(
                 "CargaInventario[id=%d, productoId=%d, bodegaId=%d, cantidad=%s, tipoCarga='%s']",
-                id, productoId, bodegaId, cantidad, tipoCarga
+                id,
+                producto != null ? producto.getId() : null,
+                bodega != null ? bodega.getId() : null,
+                cantidad,
+                tipoCarga
         );
     }
 }
-

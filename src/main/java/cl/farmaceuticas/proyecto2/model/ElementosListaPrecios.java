@@ -1,7 +1,6 @@
 package cl.farmaceuticas.proyecto2.model;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "elementos_lista_precios")
@@ -11,20 +10,22 @@ public class ElementosListaPrecios {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "lista_precio_id", nullable = false)
-    private Integer listaPrecioId;
-
-    @Column(name = "producto_id", nullable = false)
-    private Integer productoId;
-
     @Column(name = "precio", nullable = false)
     private Integer precio;
 
+    @ManyToOne
+    @JoinColumn(name = "producto_id", nullable = false)
+    private Producto producto;
+
+    @ManyToOne
+    @JoinColumn(name = "lista_precio_id", nullable = false)
+    private ListasPrecios listaPrecios;
+
     public ElementosListaPrecios() {}
 
-    public ElementosListaPrecios(Integer listaPrecioId, Integer productoId, Integer precio) {
-        this.listaPrecioId = listaPrecioId;
-        this.productoId = productoId;
+    public ElementosListaPrecios(ListasPrecios listaPrecios, Producto producto, Integer precio) {
+        this.listaPrecios = listaPrecios;
+        this.producto = producto;
         this.precio = precio;
     }
 
@@ -32,20 +33,20 @@ public class ElementosListaPrecios {
         return id;
     }
 
-    public Integer getListaPrecioId() {
-        return listaPrecioId;
+    public Producto getProducto() {
+        return producto;
     }
 
-    public void setListaPrecioId(Integer listaPrecioId) {
-        this.listaPrecioId = listaPrecioId;
+    public void setProducto(Producto producto) {
+        this.producto = producto;
     }
 
-    public Integer getProductoId() {
-        return productoId;
+    public ListasPrecios getListaPrecios() {
+        return listaPrecios;
     }
 
-    public void setProductoId(Integer productoId) {
-        this.productoId = productoId;
+    public void setListaPrecios(ListasPrecios listaPrecios) {
+        this.listaPrecios = listaPrecios;
     }
 
     public Integer getPrecio() {
@@ -59,6 +60,9 @@ public class ElementosListaPrecios {
     @Override
     public String toString() {
         return String.format("ElementoListaPrecio[id=%d, listaPrecioId=%d, productoId=%d, precio=%s]",
-                id, listaPrecioId, productoId, precio);
+                id,
+                listaPrecios != null ? listaPrecios.getId() : null,
+                producto != null ? producto.getId() : null,
+                precio);
     }
 }

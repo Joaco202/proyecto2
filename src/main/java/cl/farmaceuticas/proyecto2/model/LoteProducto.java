@@ -1,21 +1,21 @@
 package cl.farmaceuticas.proyecto2.model;
-
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-
 @Entity
 @Table(name = "lotes_producto")
 public class LoteProducto {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "producto_id", nullable = false)
-    private Integer productoId;
+    @ManyToOne
+    @JoinColumn(name = "producto_id", nullable = false)
+    private Producto producto;
 
     @Column(name = "numero_lote")
     private String numeroLote;
@@ -23,8 +23,9 @@ public class LoteProducto {
     @Column(name = "fecha_vencimiento")
     private LocalDate fechaVencimiento;
 
-    @Column(name = "bodega_id", nullable = false)
-    private Integer bodegaId;
+    @ManyToOne
+    @JoinColumn(name = "bodega_id", nullable = false)
+    private Bodega bodega;
 
     @Column(name = "cantidad", nullable = false)
     private BigDecimal cantidad;
@@ -34,29 +35,70 @@ public class LoteProducto {
 
     public LoteProducto() {}
 
-    public LoteProducto(Integer productoId, String numeroLote, LocalDate fechaVencimiento, Integer bodegaId, BigDecimal cantidad) {
-        this.productoId = productoId;
+    public LoteProducto(Producto producto, String numeroLote, LocalDate fechaVencimiento, Bodega bodega, BigDecimal cantidad) {
+        this.producto = producto;
         this.numeroLote = numeroLote;
         this.fechaVencimiento = fechaVencimiento;
-        this.bodegaId = bodegaId;
+        this.bodega = bodega;
         this.cantidad = cantidad;
     }
 
-    public Integer getId() { return id; }
-    public Integer getProductoId() { return productoId; }
-    public void setProductoId(Integer productoId) { this.productoId = productoId; }
-    public String getNumeroLote() { return numeroLote; }
-    public void setNumeroLote(String numeroLote) { this.numeroLote = numeroLote; }
-    public LocalDate getFechaVencimiento() { return fechaVencimiento; }
-    public void setFechaVencimiento(LocalDate fechaVencimiento) { this.fechaVencimiento = fechaVencimiento; }
-    public Integer getBodegaId() { return bodegaId; }
-    public void setBodegaId(Integer bodegaId) { this.bodegaId = bodegaId; }
-    public BigDecimal getCantidad() { return cantidad; }
-    public void setCantidad(BigDecimal cantidad) { this.cantidad = cantidad; }
-    public LocalDateTime getFechaCreacion() { return fechaCreacion; }
+    public Integer getId() {
+        return id;
+    }
+
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
+    public String getNumeroLote() {
+        return numeroLote;
+    }
+
+    public void setNumeroLote(String numeroLote) {
+        this.numeroLote = numeroLote;
+    }
+
+    public LocalDate getFechaVencimiento() {
+        return fechaVencimiento;
+    }
+
+    public void setFechaVencimiento(LocalDate fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
+    }
+
+    public Bodega getBodega() {
+        return bodega;
+    }
+
+    public void setBodega(Bodega bodega) {
+        this.bodega = bodega;
+    }
+
+    public BigDecimal getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(BigDecimal cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
 
     @Override
     public String toString() {
-        return String.format("LoteProducto[id=%d, productoId=%d, lote='%s']", id, productoId, numeroLote);
+        return String.format(
+                "LoteProducto[id=%d, productoId=%d, bodegaId=%d, lote='%s']",
+                id,
+                producto != null ? producto.getId() : null,
+                bodega != null ? bodega.getId() : null,
+                numeroLote
+        );
     }
 }

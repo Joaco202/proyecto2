@@ -1,6 +1,8 @@
 package cl.farmaceuticas.proyecto2.model;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "roles")
@@ -9,7 +11,7 @@ public class Rol {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
-    private Long id;  // <- usa "id" porque así se llama en la base de datos
+    private Long id;
 
     @Column(name = "nombre", nullable = false, unique = true, length = 50)
     private String nombre;
@@ -17,16 +19,16 @@ public class Rol {
     @Column(length = 255)
     private String descripcion;
 
-    public Rol() {
-    }
+    @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Usuario> usuarios = new ArrayList<>();
+
+    public Rol() {}
 
     public Rol(Long id, String nombre, String descripcion) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
     }
-
-    // Getters y setters
 
     public Long getId() {
         return id;
@@ -50,5 +52,13 @@ public class Rol {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public List<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
     }
 }

@@ -1,10 +1,8 @@
 package cl.farmaceuticas.proyecto2.model;
+
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-/**
- * Entidad Usuario del sistema
- */
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
@@ -29,8 +27,6 @@ public class Usuario {
     @Column(name = "correo", unique = true)
     private String correo;
 
-    @Column(name = "rol_id")
-    private Integer rolId;
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
@@ -38,15 +34,19 @@ public class Usuario {
     @Column(name = "fecha_modificacion")
     private LocalDateTime fechaModificacion;
 
+    @ManyToOne
+    @JoinColumn(name = "rol_id", nullable = false)
+    private Rol rol;
+
     public Usuario() {}
 
-    public Usuario(String usuario, String claveHash, String nombre, String apellido, String correo, Integer rolId) {
+    public Usuario(String usuario, String claveHash, String nombre, String apellido, String correo, Rol rol) {
         this.usuario = usuario;
         this.claveHash = claveHash;
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
-        this.rolId = rolId;
+        this.rol = rol;
     }
 
     public Integer getId() {
@@ -93,12 +93,12 @@ public class Usuario {
         this.correo = correo;
     }
 
-    public Integer getRolId() {
-        return rolId;
+    public Rol getRol() {
+        return rol;
     }
 
-    public void setRolId(Integer rolId) {
-        this.rolId = rolId;
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 
     public LocalDateTime getFechaCreacion() {

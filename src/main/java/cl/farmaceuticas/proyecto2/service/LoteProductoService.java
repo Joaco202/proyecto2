@@ -34,10 +34,10 @@ public class LoteProductoService {
     public Optional<LoteProducto> update(Integer id, LoteProducto newData) {
         return loteProductoRepository.findById(id)
                 .map(existing -> {
-                    existing.setProductoId(newData.getProductoId());
+                    existing.setProducto(newData.getProducto());
                     existing.setNumeroLote(newData.getNumeroLote());
                     existing.setFechaVencimiento(newData.getFechaVencimiento());
-                    existing.setBodegaId(newData.getBodegaId());
+                    existing.setBodega(newData.getBodega());
                     existing.setCantidad(newData.getCantidad());
                     return loteProductoRepository.save(existing);
                 });
@@ -47,3 +47,4 @@ public class LoteProductoService {
         loteProductoRepository.deleteById(id);
     }
 }
+

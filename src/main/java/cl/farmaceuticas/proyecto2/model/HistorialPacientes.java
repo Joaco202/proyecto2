@@ -1,7 +1,6 @@
 package cl.farmaceuticas.proyecto2.model;
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "historial_pacientes")
@@ -9,35 +8,44 @@ public class HistorialPacientes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "beneficiario_id", nullable = false)
-    private Integer beneficiarioId;
+    @ManyToOne
+    @JoinColumn(name = "rut_beneficiario", referencedColumnName = "rut")
+    private Beneficiarios beneficiario;
 
     @Column(name = "datos_historial")
     private String datosHistorial;
 
-    @Column(name = "fecha_registro")
-    private LocalDateTime fechaRegistro;
+    public HistorialPacientes() {
+    }
 
-    public HistorialPacientes() {}
-
-    public HistorialPacientes(Integer beneficiarioId, String datosHistorial) {
-        this.beneficiarioId = beneficiarioId;
+    public HistorialPacientes(Beneficiarios beneficiario, String datosHistorial) {
+        this.beneficiario = beneficiario;
         this.datosHistorial = datosHistorial;
     }
 
-    public Integer getId() { return id; }
-    public Integer getBeneficiarioId() { return beneficiarioId; }
-    public void setBeneficiarioId(Integer beneficiarioId) { this.beneficiarioId = beneficiarioId; }
-    public String getDatosHistorial() { return datosHistorial; }
-    public void setDatosHistorial(String datosHistorial) { this.datosHistorial = datosHistorial; }
-    public LocalDateTime getFechaRegistro() { return fechaRegistro; }
+    public Integer getId() {
+        return id;
+    }
 
-    @Override
-    public String toString() {
-        return String.format("HistorialPaciente[id=%d, beneficiarioId=%d]", id, beneficiarioId);
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Beneficiarios getBeneficiario() {
+        return beneficiario;
+    }
+
+    public void setBeneficiario(Beneficiarios beneficiario) {
+        this.beneficiario = beneficiario;
+    }
+
+    public String getDatosHistorial() {
+        return datosHistorial;
+    }
+
+    public void setDatosHistorial(String datosHistorial) {
+        this.datosHistorial = datosHistorial;
     }
 }
-

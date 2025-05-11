@@ -9,5 +9,6 @@ import java.util.List;
 public interface HistorialPacientesRepository extends JpaRepository<HistorialPacientes, Integer> {
     Optional<HistorialPacientes> findById(Integer id);
     boolean existsById(Integer id);
-    List<HistorialPacientes> findByBeneficiarioId(Integer beneficiarioId);
+    List<HistorialPacientes> findByBeneficiarioRut(String rut);
+
 }

@@ -30,10 +30,10 @@ public class HistorialPacientesController {
         return historialPacientesService.findById(id);
     }
 
-    // Obtener historial por ID del beneficiario
-    @GetMapping("/beneficiario/{beneficiarioId}")
-    public List<HistorialPacientes> getByBeneficiarioId(@PathVariable Integer beneficiarioId) {
-        return historialPacientesService.findByBeneficiarioId(beneficiarioId);
+    // Obtener historial por RUT del beneficiario
+    @GetMapping("/beneficiario/{rut}")
+    public List<HistorialPacientes> getByBeneficiarioRut(@PathVariable String rut) {
+        return historialPacientesService.findByBeneficiarioRut(rut);
     }
 
     // Crear historial

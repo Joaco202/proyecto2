@@ -31,11 +31,11 @@ public class CargasInventarioService {
     public Optional<CargasInventario> update(Integer id, CargasInventario newData) {
         return cargasInventarioRepository.findById(id)
                 .map(existing -> {
-                    existing.setProductoId(newData.getProductoId());
-                    existing.setBodegaId(newData.getBodegaId());
+                    existing.setProducto(newData.getProducto());
+                    existing.setBodega(newData.getBodega());
                     existing.setCantidad(newData.getCantidad());
                     existing.setTipoCarga(newData.getTipoCarga());
-                    existing.setUsuarioId(newData.getUsuarioId());
+                    existing.setUsuario(newData.getUsuario());
                     return cargasInventarioRepository.save(existing);
                 });
     }
@@ -44,3 +44,4 @@ public class CargasInventarioService {
         cargasInventarioRepository.deleteById(id);
     }
 }
+

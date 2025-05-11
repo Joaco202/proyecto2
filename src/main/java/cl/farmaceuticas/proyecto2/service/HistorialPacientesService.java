@@ -1,8 +1,10 @@
 package cl.farmaceuticas.proyecto2.service;
+
 import cl.farmaceuticas.proyecto2.model.HistorialPacientes;
 import cl.farmaceuticas.proyecto2.repository.HistorialPacientesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +26,8 @@ public class HistorialPacientesService {
         return historialPacientesRepository.findById(id);
     }
 
-    public List<HistorialPacientes> findByBeneficiarioId(Integer beneficiarioId) {
-        return historialPacientesRepository.findByBeneficiarioId(beneficiarioId);
+    public List<HistorialPacientes> findByBeneficiarioRut(String rut) {
+        return historialPacientesRepository.findByBeneficiarioRut(rut);
     }
 
     public HistorialPacientes create(HistorialPacientes historial) {
@@ -35,7 +37,7 @@ public class HistorialPacientesService {
     public Optional<HistorialPacientes> update(Integer id, HistorialPacientes newData) {
         return historialPacientesRepository.findById(id)
                 .map(existing -> {
-                    existing.setBeneficiarioId(newData.getBeneficiarioId());
+                    existing.setBeneficiario(newData.getBeneficiario());
                     existing.setDatosHistorial(newData.getDatosHistorial());
                     return historialPacientesRepository.save(existing);
                 });
