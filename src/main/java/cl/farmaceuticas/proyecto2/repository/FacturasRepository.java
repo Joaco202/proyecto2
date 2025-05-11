@@ -1,8 +1,11 @@
 package cl.farmaceuticas.proyecto2.repository;
 import cl.farmaceuticas.proyecto2.model.Facturas;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
-public class FacturasRepository {
-    
+@Repository
+public interface FacturasRepository extends JpaRepository<Facturas, Integer> {
+    Optional<Facturas> findById(Integer id);
+    boolean existsById(Integer id);
 }
