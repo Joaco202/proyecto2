@@ -1,7 +1,7 @@
 package cl.farmaceuticas.proyecto2.service;
 
-import cl.farmaceuticas.proyecto2.model.ElementosListaPrecios;
-import cl.farmaceuticas.proyecto2.repository.ElementosListaPreciosRepository;
+import cl.farmaceuticas.proyecto2.model.ElementosVenta;
+import cl.farmaceuticas.proyecto2.repository.ElementosVentaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -11,30 +11,32 @@ import java.util.Optional;
 public class ElementosVentaService {
     
     @Autowired
-    private final ElementosListaPreciosRepository repository;
+    private final ElementosVentaRepository repository;
 
-    public ElementosVentaService(ElementosListaPreciosRepository repository) {
+    public ElementosVentaService(ElementosVentaRepository repository) {
         this.repository = repository;
     }
 
-    public List<ElementosListaPrecios> findAll() {
+    public List<ElementosVenta> findAll() {
         return repository.findAll();
     }
 
-    public Optional<ElementosListaPrecios> findById(Integer id) {
+    public Optional<ElementosVenta> findById(Integer id) {
         return repository.findById(id);
     }
 
-    public ElementosListaPrecios save(ElementosListaPrecios e) {
+    public ElementosVenta save(ElementosVenta e) {
         return repository.save(e);
     }
 
-    public ElementosListaPrecios update(Integer id, ElementosListaPrecios datos) {
+    public ElementosVenta update(Integer id, ElementosVenta datos) {
         return repository.findById(id)
                 .map(existing -> {
-                    existing.setListaPrecioId(datos.getListaPrecioId());
                     existing.setProductoId(datos.getProductoId());
+                    existing.setLoteId(datos.getLoteId());
+                    existing.setCantidad(datos.getCantidad());
                     existing.setPrecio(datos.getPrecio());
+                    existing.setDescuento(datos.getDescuento());
                     return repository.save(existing);
                 })
                 .orElseThrow(() -> new RuntimeException("Elemento no encontrado"));

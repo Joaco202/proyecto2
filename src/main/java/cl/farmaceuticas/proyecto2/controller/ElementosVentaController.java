@@ -4,12 +4,13 @@ import cl.farmaceuticas.proyecto2.model.ElementosVenta;
 import cl.farmaceuticas.proyecto2.service.ElementosVentaService;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/elementos-venta")
 public class ElementosVentaController {
 
-    /*Creo que se antes se necesita hacer el ventas controller
+    /*Creo que se antes se necesita hacer el ventas controller*/
     private final ElementosVentaService elementosVentaService;
 
     public ElementosVentaController(ElementosVentaService elementosVentaService) {
@@ -39,5 +40,5 @@ public class ElementosVentaController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id) {
         elementosVentaService.delete(id);
-    }*/
+    }
 }
