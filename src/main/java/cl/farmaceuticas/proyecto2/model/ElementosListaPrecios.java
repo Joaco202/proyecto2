@@ -2,9 +2,6 @@ package cl.farmaceuticas.proyecto2.model;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
-/**
- * Elemento de lista de precios
- */
 @Entity
 @Table(name = "elementos_lista_precios")
 public class ElementosListaPrecios {
