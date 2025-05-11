@@ -1,7 +1,5 @@
 package cl.farmaceuticas.proyecto2.model;
 
-
-
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -28,7 +26,8 @@ public class Bodega {
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
 
-    public Bodega() {}
+    public Bodega() {
+    }
 
     public Bodega(String nombre, String ubicacion, String descripcion) {
         this.nombre = nombre;
@@ -36,18 +35,44 @@ public class Bodega {
         this.descripcion = descripcion;
     }
 
-    public Integer getId() { return id; }
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
-    public String getUbicacion() { return ubicacion; }
-    public void setUbicacion(String ubicacion) { this.ubicacion = ubicacion; }
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
-    public LocalDateTime getFechaCreacion() { return fechaCreacion; }
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
 
     @Override
     public String toString() {
         return String.format("Bodega[id=%d, nombre='%s']", id, nombre);
     }
 }
-
