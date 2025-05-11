@@ -71,20 +71,23 @@ CREATE TABLE elementos_lista_precios (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   lista_precio_id INT UNSIGNED NOT NULL,
   producto_id     INT UNSIGNED NOT NULL,
-  precio          DECIMAL(12,2) NOT NULL,
+  precio          INT UNSIGNED NOT NULL,
   FOREIGN KEY (lista_precio_id) REFERENCES listas_precios(id) ON DELETE CASCADE,
   FOREIGN KEY (producto_id)     REFERENCES productos(id)      ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE beneficiarios (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  rut              VARCHAR(20) NOT NULL UNIQUE,
   tipo_documento   VARCHAR(10),
   numero_documento VARCHAR(50) NOT NULL UNIQUE,
   nombre           VARCHAR(50) NOT NULL,
-  apellido         VARCHAR(50) NOT NULL,
+  apellido         VARCHAR(80) NOT NULL,
+  sexo             VARCHAR(20),NOT NULL, 
   fecha_nacimiento DATE,
   direccion        TEXT,
   telefono         VARCHAR(20),
+  comuna           VARCHAR(100),
   correo           VARCHAR(100),
   fecha_creacion   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
