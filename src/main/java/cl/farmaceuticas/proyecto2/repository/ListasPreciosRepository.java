@@ -9,5 +9,4 @@ import java.util.Optional;
 public interface ListasPreciosRepository extends JpaRepository<ListasPrecios, Integer> {
     Optional<ListasPrecios> findById(Integer id);
     boolean existsById(Integer id);
-    List<ListasPrecios> findByBodegaId(Integer bodegaId);
 }

@@ -32,11 +32,6 @@ public class LoteProductoController {
         return loteProductoService.findById(id);
     }
 
-    // Obtener lotes por ID de producto
-    @GetMapping("/producto/{productoId}")
-    public List<LoteProducto> getByProductoId(@PathVariable Integer productoId) {
-        return loteProductoService.findByProductoId(productoId);
-    }
 
     // Crear nuevo lote
     @PostMapping

@@ -26,9 +26,6 @@ public class LoteProductoService {
         return loteProductoRepository.findById(id);
     }
 
-    public List<LoteProducto> findByProductoId(Integer productoId) {
-        return loteProductoRepository.findByProductoId(productoId);
-    }
 
     public LoteProducto create(LoteProducto lote) {
         return loteProductoRepository.save(lote);

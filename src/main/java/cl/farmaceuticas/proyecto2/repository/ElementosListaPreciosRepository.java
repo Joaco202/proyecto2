@@ -9,5 +9,4 @@ import java.util.Optional;
 public interface ElementosListaPreciosRepository extends JpaRepository<ElementosListaPrecios, Integer> {
     Optional<ElementosListaPrecios> findById(Integer id);
     boolean existsById(Integer id);
-    List<ElementosListaPrecios> findByBodegaId(Integer bodegaId);
 }

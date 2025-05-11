@@ -9,5 +9,4 @@ import java.util.Optional;
 public interface ReglasAlertaRepository extends JpaRepository<ReglasAlerta, Integer> {
     Optional<ReglasAlerta> findById(Integer id);
     boolean existsById(Integer id);
-    List<ReglasAlerta> findByBodegaId(Integer bodegaId);
 }

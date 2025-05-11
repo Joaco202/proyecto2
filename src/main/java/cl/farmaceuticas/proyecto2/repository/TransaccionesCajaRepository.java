@@ -9,5 +9,4 @@ import java.util.Optional;
 public interface TransaccionesCajaRepository extends JpaRepository<TransaccionesCaja, Integer> {
     Optional<TransaccionesCaja> findById(Integer id);
     boolean existsById(Integer id);
-    List<TransaccionesCaja> findByBodegaId(Integer bodegaId);
 }

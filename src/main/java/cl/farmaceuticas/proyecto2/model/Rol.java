@@ -1,17 +1,15 @@
 package cl.farmaceuticas.proyecto2.model;
 
 import jakarta.persistence.*;
-import com.fasterxml.jackson.annotation.*;
-import java.util.*;
 
 @Entity
 @Table(name = "roles")
 public class Rol {
-   
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_rol", updatable = false, nullable = false)
-    private Long idRol;
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;  // <- usa "id" porque así se llama en la base de datos
 
     @Column(name = "nombre", nullable = false, unique = true, length = 50)
     private String nombre;
@@ -22,18 +20,20 @@ public class Rol {
     public Rol() {
     }
 
-    public Rol(Long idRol, String nombre) {
-        this.idRol = idRol;
+    public Rol(Long id, String nombre, String descripcion) {
+        this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
     }
 
-    public Long getIdRol() {
-        return idRol;
+    // Getters y setters
+
+    public Long getId() {
+        return id;
     }
 
-    public void setIdRol(Long idRol) {
-        this.idRol = idRol;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNombre() {

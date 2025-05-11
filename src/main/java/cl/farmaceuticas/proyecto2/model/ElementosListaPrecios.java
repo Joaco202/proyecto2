@@ -1,4 +1,5 @@
 package cl.farmaceuticas.proyecto2.model;
+
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
@@ -8,7 +9,6 @@ public class ElementosListaPrecios {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
 
     @Column(name = "lista_precio_id", nullable = false)
@@ -58,7 +58,7 @@ public class ElementosListaPrecios {
 
     @Override
     public String toString() {
-        return String.format("ElementoListaPrecio[id=%d, listaPrecioId=%d, productoId=%d, precio=%s]", id, listaPrecioId, productoId, precio);
+        return String.format("ElementoListaPrecio[id=%d, listaPrecioId=%d, productoId=%d, precio=%s]",
+                id, listaPrecioId, productoId, precio);
     }
 }
-

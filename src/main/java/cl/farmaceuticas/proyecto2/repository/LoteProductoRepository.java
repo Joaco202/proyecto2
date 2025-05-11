@@ -9,8 +9,6 @@ import java.util.List;
 public interface LoteProductoRepository extends JpaRepository<LoteProducto, Integer> {
     Optional<LoteProducto> findById(Integer id);
     boolean existsById(Integer id);
-    Optional<LoteProducto> findByLote(String lote);
-    Optional<LoteProducto> findByLoteAndIdBodega(String lote, Integer idBodega);
-    List<LoteProducto> findByProductoId(Integer productoId);
-
+    Optional<LoteProducto> findByNumeroLote(String numeroLote);
+    Optional<LoteProducto> findByNumeroLoteAndBodegaId(String numeroLote, Integer bodegaId);
 }
