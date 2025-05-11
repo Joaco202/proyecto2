@@ -26,13 +26,13 @@ public class BodegaService {
         return bodegaRepository.save(bodega);
     }
 
-    public Bodega update(Integer id, Bodega bodega) {
-        if (bodegaRepository.existsById(id)) {
-            bodega.setId(id); // Asegúrate de tener setId en tu entidad
-            return bodegaRepository.save(bodega);
-        } else {
-            return null;
-        }
+    public Bodega update(Integer id, Bodega datos) {
+        return bodegaRepository.findById(id).map(b -> {
+            b.setNombre(datos.getNombre());
+            b.setDescripcion(datos.getDescripcion());
+            return bodegaRepository.save(b);
+        })
+        .orElseThrow(() -> new RuntimeException("Bodega no encontrada"));
     }
 
     public boolean delete(Integer id) {
