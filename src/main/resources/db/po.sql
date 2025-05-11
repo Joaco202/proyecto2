@@ -2,7 +2,7 @@ CREATE TABLE roles (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(50) NOT NULL UNIQUE,
   descripcion TEXT
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE usuarios (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -15,7 +15,7 @@ CREATE TABLE usuarios (
   fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   fecha_modificacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (rol_id) REFERENCES roles(id) ON DELETE SET NULL
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE bodegas (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -23,7 +23,7 @@ CREATE TABLE bodegas (
   ubicacion VARCHAR(255),
   descripcion TEXT,
   fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE productos (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -33,7 +33,7 @@ CREATE TABLE productos (
   unidad VARCHAR(20),
   activo TINYINT(1) NOT NULL DEFAULT 1,
   fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE lotes_producto (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -45,7 +45,7 @@ CREATE TABLE lotes_producto (
   fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE,
   FOREIGN KEY (bodega_id)   REFERENCES bodegas(id)    ON DELETE CASCADE
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE cargas_inventario (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -58,14 +58,14 @@ CREATE TABLE cargas_inventario (
   FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE,
   FOREIGN KEY (bodega_id)   REFERENCES bodegas(id)    ON DELETE CASCADE,
   FOREIGN KEY (usuario_id)  REFERENCES usuarios(id)   ON DELETE SET NULL
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE listas_precios (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
   fecha_vigencia DATE NOT NULL,
   fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE elementos_lista_precios (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -74,7 +74,7 @@ CREATE TABLE elementos_lista_precios (
   precio          DECIMAL(12,2) NOT NULL,
   FOREIGN KEY (lista_precio_id) REFERENCES listas_precios(id) ON DELETE CASCADE,
   FOREIGN KEY (producto_id)     REFERENCES productos(id)      ON DELETE CASCADE
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE beneficiarios (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -87,7 +87,7 @@ CREATE TABLE beneficiarios (
   telefono         VARCHAR(20),
   correo           VARCHAR(100),
   fecha_creacion   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE historial_pacientes (
   id             INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -95,7 +95,7 @@ CREATE TABLE historial_pacientes (
   datos_historial TEXT,
   fecha_registro  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (beneficiario_id) REFERENCES beneficiarios(id) ON DELETE CASCADE
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE facturas (
   id             INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -106,7 +106,7 @@ CREATE TABLE facturas (
   estado         VARCHAR(20) NOT NULL DEFAULT 'emitida',
   fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (beneficiario_id) REFERENCES beneficiarios(id) ON DELETE RESTRICT
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE guias_despacho (
   id           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -116,7 +116,7 @@ CREATE TABLE guias_despacho (
   destino      TEXT,
   fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (factura_id) REFERENCES facturas(id) ON DELETE CASCADE
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE ventas (
   id           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -126,7 +126,7 @@ CREATE TABLE ventas (
   monto_total  DECIMAL(12,2),
   FOREIGN KEY (factura_id) REFERENCES facturas(id) ON DELETE RESTRICT,
   FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE elementos_venta (
   id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -139,7 +139,7 @@ CREATE TABLE elementos_venta (
   FOREIGN KEY (venta_id)    REFERENCES ventas(id)           ON DELETE CASCADE,
   FOREIGN KEY (producto_id) REFERENCES productos(id)        ON DELETE RESTRICT,
   FOREIGN KEY (lote_id)     REFERENCES lotes_producto(id)   ON DELETE SET NULL
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE compras (
   id              INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -149,7 +149,7 @@ CREATE TABLE compras (
   monto_total     DECIMAL(12,2),
   estado          VARCHAR(20) NOT NULL DEFAULT 'recibido',
   fecha_creacion  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE elementos_compra (
   id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -161,7 +161,7 @@ CREATE TABLE elementos_compra (
   FOREIGN KEY (compra_id)   REFERENCES compras(id)        ON DELETE CASCADE,
   FOREIGN KEY (producto_id) REFERENCES productos(id)      ON DELETE RESTRICT,
   FOREIGN KEY (lote_id)     REFERENCES lotes_producto(id) ON DELETE SET NULL
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE notas_credito (
   id                  INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -172,7 +172,7 @@ CREATE TABLE notas_credito (
   motivo              TEXT,
   fecha_creacion      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (compra_id) REFERENCES compras(id) ON DELETE RESTRICT
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE fraccionamientos (
   id                    INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -184,7 +184,7 @@ CREATE TABLE fraccionamientos (
   FOREIGN KEY (producto_original_id) REFERENCES productos(id) ON DELETE RESTRICT,
   FOREIGN KEY (producto_fraccion_id) REFERENCES productos(id) ON DELETE RESTRICT,
   FOREIGN KEY (usuario_id)             REFERENCES usuarios(id)  ON DELETE SET NULL
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE movimientos_inventario (
   id               INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -201,7 +201,7 @@ CREATE TABLE movimientos_inventario (
   FOREIGN KEY (lote_id)          REFERENCES lotes_producto(id) ON DELETE SET NULL,
   FOREIGN KEY (bodega_id)        REFERENCES bodegas(id)        ON DELETE RESTRICT,
   FOREIGN KEY (usuario_id)       REFERENCES usuarios(id)      ON DELETE SET NULL
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE cajas (
   id             INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -210,7 +210,7 @@ CREATE TABLE cajas (
   monto_inicial  DECIMAL(12,2),
   monto_final    DECIMAL(12,2),
   FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE transacciones_caja (
   id               INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -222,7 +222,7 @@ CREATE TABLE transacciones_caja (
   usuario_id       INT UNSIGNED,
   FOREIGN KEY (caja_id)    REFERENCES cajas(id)     ON DELETE CASCADE,
   FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE dispersiones (
   id               INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -233,7 +233,7 @@ CREATE TABLE dispersiones (
   estado           VARCHAR(20) NOT NULL DEFAULT 'pendiente',
   FOREIGN KEY (beneficiario_id) REFERENCES beneficiarios(id) ON DELETE RESTRICT,
   FOREIGN KEY (usuario_id)       REFERENCES usuarios(id)      ON DELETE SET NULL
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE dispensaciones (
   id               INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -247,7 +247,7 @@ CREATE TABLE dispensaciones (
   FOREIGN KEY (producto_id)       REFERENCES productos(id)    ON DELETE RESTRICT,
   FOREIGN KEY (lote_id)           REFERENCES lotes_producto(id) ON DELETE SET NULL,
   FOREIGN KEY (usuario_id)       REFERENCES usuarios(id)       ON DELETE SET NULL
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE reglas_alerta (
   id                INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -256,4 +256,4 @@ CREATE TABLE reglas_alerta (
   umbral_cantidad   DECIMAL(12,2),
   activo            TINYINT(1) NOT NULL DEFAULT 1,
   FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
