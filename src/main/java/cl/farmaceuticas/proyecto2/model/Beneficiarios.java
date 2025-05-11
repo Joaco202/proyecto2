@@ -27,9 +27,6 @@ public class Beneficiarios {
     public String getRut() {
         return rut;
     }
-    public void setRut(String rut) {
-        this.rut = rut;
-    }
     public String getNombre() {
         return nombre;
     }
@@ -78,30 +75,5 @@ public class Beneficiarios {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
-    /*@Override
-    public String toString() {
-        return "Beneficiarios{" +
-                "rut='" + rut + '\'' +
-                ", nombre='" + nombre + '\'' +
-                ", apellidoPaterno='" + apellidoPaterno + '\'' +
-                ", apellidoMaterno='" + apellidoMaterno + '\'' +
-                ", fechaNacimiento='" + fechaNacimiento + '\'' +
-                ", sexo='" + sexo + '\'' +
-                ", direccion='" + direccion + '\'' +
-                ", comuna='" + comuna + '\'' +
-                ", telefono='" + telefono + '\'' +
-                '}';
-    }
-    @Override
-    public int hashCode() {
-        return Objects.hash(apellidoMaterno, apellidoPaterno, comuna, direccion, fechaNacimiento, nombre, sexo, telefono, rut);
-        }
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Beneficiarios)) return false;
-        Beneficiarios that = (Beneficiarios) o;
-        return Objects.equals(rut, that.rut);
-    }*/
 
 }

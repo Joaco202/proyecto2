@@ -1,8 +1,10 @@
 package cl.farmaceuticas.proyecto2.repository;
 import cl.farmaceuticas.proyecto2.model.Beneficiarios;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
-public class BeneficiariosRepository {
-    
+@Repository
+public interface BeneficiariosRepository extends JpaRepository<Beneficiarios, Long> {
+
 }
