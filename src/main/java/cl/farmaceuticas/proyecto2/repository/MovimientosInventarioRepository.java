@@ -10,4 +10,5 @@ public interface MovimientosInventarioRepository extends JpaRepository<Movimient
     Optional<MovimientosInventario> findById(Integer id);
     boolean existsById(Integer id);
     List<MovimientosInventario> findByBodegaId(Integer bodegaId);
+    List<MovimientosInventario> findByProductoId(Integer productoId);
 }

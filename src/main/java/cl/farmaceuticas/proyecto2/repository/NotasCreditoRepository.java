@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface NotasCreditoRepository extends JpaRepository<NotasCredito, Integer> {
     Optional<NotasCredito> findById(Integer id);
     boolean existsById(Integer id);
+    Optional<NotasCredito> findByNumeroNotaCredito(String numeroNotaCredito);
 }
