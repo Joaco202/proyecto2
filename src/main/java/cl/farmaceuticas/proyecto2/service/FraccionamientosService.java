@@ -33,14 +33,15 @@ public class FraccionamientosService {
     public Optional<Fraccionamientos> update(Integer id, Fraccionamientos newData) {
         return fraccionamientosRepository.findById(id)
                 .map(existing -> {
-                    existing.setProductoOriginalId(newData.getProductoOriginalId());
-                    existing.setProductoFraccionId(newData.getProductoFraccionId());
+                    existing.setProductoOriginal(newData.getProductoOriginal());
+                    existing.setProductoFraccion(newData.getProductoFraccion());
                     existing.setCantidad(newData.getCantidad());
                     existing.setFecha(newData.getFecha());
-                    existing.setUsuarioId(newData.getUsuarioId());
+                    existing.setUsuario(newData.getUsuario());
                     return fraccionamientosRepository.save(existing);
                 });
     }
+
 
     public void delete(Integer id) {
         fraccionamientosRepository.deleteById(id);

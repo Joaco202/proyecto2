@@ -4,55 +4,68 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 
+
+
 @Entity
 @Table(name = "fraccionamientos")
 public class Fraccionamientos {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "producto_original_id", nullable = false)
-    private Integer productoOriginalId;
+    @ManyToOne
+    @JoinColumn(name = "producto_original_id", nullable = false)
+    private Producto productoOriginal;
 
-    @Column(name = "producto_fraccion_id", nullable = false)
-    private Integer productoFraccionId;
+    @ManyToOne
+    @JoinColumn(name = "producto_fraccion_id", nullable = false)
+    private Producto productoFraccion;
 
-    @Column(name = "cantidad", nullable = false)
+    @Column(nullable = false)
     private BigDecimal cantidad;
 
-    @Column(name = "fecha", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime fecha;
 
-    @Column(name = "usuario_id")
-    private Integer usuarioId;
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 
     public Fraccionamientos() {}
 
-    public Fraccionamientos(Integer productoOriginalId, Integer productoFraccionId, BigDecimal cantidad, LocalDateTime fecha, Integer usuarioId) {
-        this.productoOriginalId = productoOriginalId;
-        this.productoFraccionId = productoFraccionId;
+    public Fraccionamientos(Producto productoOriginal, Producto productoFraccion, BigDecimal cantidad, LocalDateTime fecha, Usuario usuario) {
+        this.productoOriginal = productoOriginal;
+        this.productoFraccion = productoFraccion;
         this.cantidad = cantidad;
         this.fecha = fecha;
-        this.usuarioId = usuarioId;
+        this.usuario = usuario;
     }
 
     public Integer getId() { return id; }
-    public Integer getProductoOriginalId() { return productoOriginalId; }
-    public void setProductoOriginalId(Integer productoOriginalId) { this.productoOriginalId = productoOriginalId; }
-    public Integer getProductoFraccionId() { return productoFraccionId; }
-    public void setProductoFraccionId(Integer productoFraccionId) { this.productoFraccionId = productoFraccionId; }
+
+    public Producto getProductoOriginal() { return productoOriginal; }
+    public void setProductoOriginal(Producto productoOriginal) { this.productoOriginal = productoOriginal; }
+
+    public Producto getProductoFraccion() { return productoFraccion; }
+    public void setProductoFraccion(Producto productoFraccion) { this.productoFraccion = productoFraccion; }
+
     public BigDecimal getCantidad() { return cantidad; }
     public void setCantidad(BigDecimal cantidad) { this.cantidad = cantidad; }
+
     public LocalDateTime getFecha() { return fecha; }
     public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
-    public Integer getUsuarioId() { return usuarioId; }
-    public void setUsuarioId(Integer usuarioId) { this.usuarioId = usuarioId; }
+
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 
     @Override
     public String toString() {
-        return String.format("Fraccionamiento[id=%d, originalId=%d, fraccionId=%d, cantidad=%s]", id, productoOriginalId, productoFraccionId, cantidad);
+        return String.format("Fraccionamiento[id=%d, originalId=%d, fraccionId=%d, cantidad=%s]",
+                id,
+                productoOriginal != null ? productoOriginal.getId() : null,
+                productoFraccion != null ? productoFraccion.getId() : null,
+                cantidad);
     }
 }
 

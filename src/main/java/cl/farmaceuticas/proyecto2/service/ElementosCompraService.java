@@ -31,14 +31,15 @@ public class ElementosCompraService {
     public Optional<ElementosCompra> update(Integer id, ElementosCompra newData) {
         return elementosCompraRepository.findById(id)
                 .map(existing -> {
-                    existing.setCompraId(newData.getCompraId());
-                    existing.setProductoId(newData.getProductoId());
-                    existing.setLoteId(newData.getLoteId());
+                    existing.setCompra(newData.getCompra());
+                    existing.setProducto(newData.getProducto());
+                    existing.setLote(newData.getLote());
                     existing.setCantidad(newData.getCantidad());
                     existing.setPrecio(newData.getPrecio());
                     return elementosCompraRepository.save(existing);
                 });
     }
+
 
     public void delete(Integer id) {
         elementosCompraRepository.deleteById(id);

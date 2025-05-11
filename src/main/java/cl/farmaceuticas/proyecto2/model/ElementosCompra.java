@@ -9,41 +9,43 @@ public class ElementosCompra {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "compra_id", nullable = false)
-    private Integer compraId;
+    @ManyToOne
+    @JoinColumn(name = "compra_id", nullable = false)
+    private Compras compra;
 
-    @Column(name = "producto_id", nullable = false)
-    private Integer productoId;
+    @ManyToOne
+    @JoinColumn(name = "producto_id", nullable = false)
+    private Producto producto;
 
-    @Column(name = "lote_id")
-    private Integer loteId;
+    @ManyToOne
+    @JoinColumn(name = "lote_id")
+    private LoteProducto lote;
 
-    @Column(name = "cantidad", nullable = false)
+    @Column(nullable = false)
     private BigDecimal cantidad;
 
-    @Column(name = "precio", nullable = false)
+    @Column(nullable = false)
     private BigDecimal precio;
 
     public ElementosCompra() {}
 
-    public ElementosCompra(Integer compraId, Integer productoId, Integer loteId, BigDecimal cantidad, BigDecimal precio) {
-        this.compraId = compraId;
-        this.productoId = productoId;
-        this.loteId = loteId;
+    public ElementosCompra(Compras compra, Producto producto, LoteProducto lote, BigDecimal cantidad, BigDecimal precio) {
+        this.compra = compra;
+        this.producto = producto;
+        this.lote = lote;
         this.cantidad = cantidad;
         this.precio = precio;
     }
 
     public Integer getId() { return id; }
-    public Integer getCompraId() { return compraId; }
-    public void setCompraId(Integer compraId) { this.compraId = compraId; }
-    public Integer getProductoId() { return productoId; }
-    public void setProductoId(Integer productoId) { this.productoId = productoId; }
-    public Integer getLoteId() { return loteId; }
-    public void setLoteId(Integer loteId) { this.loteId = loteId; }
+    public Compras getCompra() { return compra; }
+    public void setCompra(Compras compra) { this.compra = compra; }
+    public Producto getProducto() { return producto; }
+    public void setProducto(Producto producto) { this.producto = producto; }
+    public LoteProducto getLote() { return lote; }
+    public void setLote(LoteProducto lote) { this.lote = lote; }
     public BigDecimal getCantidad() { return cantidad; }
     public void setCantidad(BigDecimal cantidad) { this.cantidad = cantidad; }
     public BigDecimal getPrecio() { return precio; }
@@ -51,7 +53,13 @@ public class ElementosCompra {
 
     @Override
     public String toString() {
-        return String.format("ElementoCompra[id=%d, compraId=%d, productoId=%d, cantidad=%s, precio=%s]", id, compraId, productoId, cantidad, precio);
+        return String.format("ElementoCompra[id=%d, compra=%s, producto=%s, cantidad=%s, precio=%s]",
+                id,
+                compra != null ? compra.getId() : "null",
+                producto != null ? producto.getId() : "null",
+                cantidad,
+                precio);
     }
 }
+
 

@@ -38,13 +38,14 @@ public class NotasCreditoService {
         return notasCreditoRepository.findById(id)
                 .map(existing -> {
                     existing.setNumeroNotaCredito(newData.getNumeroNotaCredito());
-                    existing.setCompraId(newData.getCompraId());
+                    existing.setCompra(newData.getCompra()); // Aquí se usa la entidad completa
                     existing.setFecha(newData.getFecha());
                     existing.setMonto(newData.getMonto());
                     existing.setMotivo(newData.getMotivo());
                     return notasCreditoRepository.save(existing);
                 });
     }
+
 
     public void delete(Integer id) {
         notasCreditoRepository.deleteById(id);
