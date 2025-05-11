@@ -9,14 +9,8 @@ public class ElementosVenta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "venta_id", nullable = false)
-    private Integer ventaId;
-
-    @Column(name = "producto_id", nullable = false)
-    private Integer productoId;
 
     @Column(name = "lote_id")
     private Integer loteId;
@@ -30,15 +24,25 @@ public class ElementosVenta {
     @Column(name = "descuento", nullable = false)
     private BigDecimal descuento;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bodega_id", referencedColumnName = "id")
     private Bodega bodega;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "venta_id", nullable = false)
+    private Ventas venta;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "producto_id", nullable = false)
+    private Producto producto;
+
+
     public ElementosVenta() {}
 
-    public ElementosVenta(Integer ventaId, Integer productoId, Integer loteId, BigDecimal cantidad, BigDecimal precio, BigDecimal descuento, Bodega bodega) {
-        this.ventaId = ventaId;
-        this.productoId = productoId;
+    public ElementosVenta(Ventas venta, Producto producto, Integer loteId, BigDecimal cantidad,
+                          BigDecimal precio, BigDecimal descuento, Bodega bodega) {
+        this.venta = venta;
+        this.producto = producto;
         this.loteId = loteId;
         this.cantidad = cantidad;
         this.precio = precio;
@@ -48,11 +52,11 @@ public class ElementosVenta {
 
     public Integer getId() { return id; }
 
-    public Integer getVentaId() { return ventaId; }
-    public void setVentaId(Integer ventaId) { this.ventaId = ventaId; }
+    public Ventas getVenta() { return venta; }
+    public void setVenta(Ventas venta) { this.venta = venta; }
 
-    public Integer getProductoId() { return productoId; }
-    public void setProductoId(Integer productoId) { this.productoId = productoId; }
+    public Producto getProducto() { return producto; }
+    public void setProducto(Producto producto) { this.producto = producto; }
 
     public Integer getLoteId() { return loteId; }
     public void setLoteId(Integer loteId) { this.loteId = loteId; }
@@ -72,6 +76,11 @@ public class ElementosVenta {
     @Override
     public String toString() {
         return String.format("ElementoVenta[id=%d, ventaId=%d, productoId=%d, cantidad=%s, precio=%s, descuento=%s, bodega=%s]",
-                id, ventaId, productoId, cantidad, precio, descuento, bodega != null ? bodega.getId() : "null");
+                id,
+                venta != null ? venta.getId() : null,
+                producto != null ? producto.getId() : null,
+                cantidad, precio, descuento,
+                bodega != null ? bodega.getId() : "null");
     }
 }
+

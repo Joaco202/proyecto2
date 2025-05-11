@@ -11,14 +11,14 @@ public class NotasCredito {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
 
     @Column(name = "numero_nota_credito", nullable = false, unique = true)
     private String numeroNotaCredito;
 
-    @Column(name = "compra_id", nullable = false)
-    private Integer compraId;
+    @ManyToOne
+    @JoinColumn(name = "compra_id", nullable = false)
+    private Compras compra;
 
     @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
@@ -34,9 +34,9 @@ public class NotasCredito {
 
     public NotasCredito() {}
 
-    public NotasCredito(String numeroNotaCredito, Integer compraId, LocalDate fecha, BigDecimal monto, String motivo) {
+    public NotasCredito(String numeroNotaCredito, Compras compra, LocalDate fecha, BigDecimal monto, String motivo) {
         this.numeroNotaCredito = numeroNotaCredito;
-        this.compraId = compraId;
+        this.compra = compra;
         this.fecha = fecha;
         this.monto = monto;
         this.motivo = motivo;
@@ -54,12 +54,12 @@ public class NotasCredito {
         this.numeroNotaCredito = numeroNotaCredito;
     }
 
-    public Integer getCompraId() {
-        return compraId;
+    public Compras getCompra() {
+        return compra;
     }
 
-    public void setCompraId(Integer compraId) {
-        this.compraId = compraId;
+    public void setCompra(Compras compra) {
+        this.compra = compra;
     }
 
     public LocalDate getFecha() {
@@ -95,3 +95,4 @@ public class NotasCredito {
         return String.format("NotaCredito[id=%d, numeroNotaCredito='%s', fecha=%s]", id, numeroNotaCredito, fecha);
     }
 }
+

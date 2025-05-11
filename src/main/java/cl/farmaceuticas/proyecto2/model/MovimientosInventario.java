@@ -1,4 +1,5 @@
 package cl.farmaceuticas.proyecto2.model;
+
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -39,9 +40,27 @@ public class MovimientosInventario {
     @Column(name = "usuario_id")
     private Integer usuarioId;
 
+    // Relaciones
+    @ManyToOne
+    @JoinColumn(name = "producto_id", insertable = false, updatable = false)
+    private Producto producto;
+
+    @ManyToOne
+    @JoinColumn(name = "lote_id", insertable = false, updatable = false)
+    private LoteProducto lote;
+
+    @ManyToOne
+    @JoinColumn(name = "bodega_id", insertable = false, updatable = false)
+    private Bodega bodega;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", insertable = false, updatable = false)
+    private Usuario usuario;
+
     public MovimientosInventario() {}
 
-    public MovimientosInventario(Integer productoId, Integer loteId, Integer bodegaId, String tipoMovimiento, String moduloReferencia, Integer idReferencia, BigDecimal cantidad, Integer usuarioId) {
+    public MovimientosInventario(Integer productoId, Integer loteId, Integer bodegaId, String tipoMovimiento,
+                                 String moduloReferencia, Integer idReferencia, BigDecimal cantidad, Integer usuarioId) {
         this.productoId = productoId;
         this.loteId = loteId;
         this.bodegaId = bodegaId;
@@ -50,29 +69,107 @@ public class MovimientosInventario {
         this.idReferencia = idReferencia;
         this.cantidad = cantidad;
         this.usuarioId = usuarioId;
+        this.fechaMovimiento = LocalDateTime.now();
     }
 
-    public Integer getId() { return id; }
-    public Integer getProductoId() { return productoId; }
-    public void setProductoId(Integer productoId) { this.productoId = productoId; }
-    public Integer getLoteId() { return loteId; }
-    public void setLoteId(Integer loteId) { this.loteId = loteId; }
-    public Integer getBodegaId() { return bodegaId; }
-    public void setBodegaId(Integer bodegaId) { this.bodegaId = bodegaId; }
-    public String getTipoMovimiento() { return tipoMovimiento; }
-    public void setTipoMovimiento(String tipoMovimiento) { this.tipoMovimiento = tipoMovimiento; }
-    public String getModuloReferencia() { return moduloReferencia; }
-    public void setModuloReferencia(String moduloReferencia) { this.moduloReferencia = moduloReferencia; }
-    public Integer getIdReferencia() { return idReferencia; }
-    public void setIdReferencia(Integer idReferencia) { this.idReferencia = idReferencia; }
-    public BigDecimal getCantidad() { return cantidad; }
-    public void setCantidad(BigDecimal cantidad) { this.cantidad = cantidad; }
-    public LocalDateTime getFechaMovimiento() { return fechaMovimiento; }
-    public Integer getUsuarioId() { return usuarioId; }
-    public void setUsuarioId(Integer usuarioId) { this.usuarioId = usuarioId; }
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getProductoId() {
+        return productoId;
+    }
+
+    public void setProductoId(Integer productoId) {
+        this.productoId = productoId;
+    }
+
+    public Integer getLoteId() {
+        return loteId;
+    }
+
+    public void setLoteId(Integer loteId) {
+        this.loteId = loteId;
+    }
+
+    public Integer getBodegaId() {
+        return bodegaId;
+    }
+
+    public void setBodegaId(Integer bodegaId) {
+        this.bodegaId = bodegaId;
+    }
+
+    public String getTipoMovimiento() {
+        return tipoMovimiento;
+    }
+
+    public void setTipoMovimiento(String tipoMovimiento) {
+        this.tipoMovimiento = tipoMovimiento;
+    }
+
+    public String getModuloReferencia() {
+        return moduloReferencia;
+    }
+
+    public void setModuloReferencia(String moduloReferencia) {
+        this.moduloReferencia = moduloReferencia;
+    }
+
+    public Integer getIdReferencia() {
+        return idReferencia;
+    }
+
+    public void setIdReferencia(Integer idReferencia) {
+        this.idReferencia = idReferencia;
+    }
+
+    public BigDecimal getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(BigDecimal cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public LocalDateTime getFechaMovimiento() {
+        return fechaMovimiento;
+    }
+
+    public void setFechaMovimiento(LocalDateTime fechaMovimiento) {
+        this.fechaMovimiento = fechaMovimiento;
+    }
+
+    public Integer getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(Integer usuarioId) {
+        this.usuarioId = usuarioId;
+    }
+
+    // Getters para las relaciones
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public LoteProducto getLote() {
+        return lote;
+    }
+
+    public Bodega getBodega() {
+        return bodega;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
 
     @Override
     public String toString() {
-        return String.format("MovimientoInventario[id=%d, productoId=%d, tipo='%s', cantidad=%s]", id, productoId, tipoMovimiento, cantidad);
+        return String.format(
+                "MovimientoInventario[id=%d, productoId=%d, tipo='%s', cantidad=%s]",
+                id, productoId, tipoMovimiento, cantidad
+        );
     }
 }

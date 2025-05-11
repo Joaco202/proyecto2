@@ -32,11 +32,12 @@ public class ElementosVentaService {
     public ElementosVenta update(Integer id, ElementosVenta datos) {
         return repository.findById(id)
                 .map(existing -> {
-                    existing.setProductoId(datos.getProductoId());
+                    existing.setProducto(datos.getProducto());
                     existing.setLoteId(datos.getLoteId());
                     existing.setCantidad(datos.getCantidad());
                     existing.setPrecio(datos.getPrecio());
                     existing.setDescuento(datos.getDescuento());
+                    existing.setBodega(datos.getBodega());
                     return repository.save(existing);
                 })
                 .orElseThrow(() -> new RuntimeException("Elemento no encontrado"));
