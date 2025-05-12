@@ -15,58 +15,44 @@ public class Dispensaciones {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "beneficiario_id", nullable = false)
-    private Integer beneficiarioId;
-
-    @Column(name = "producto_id", nullable = false)
-    private Integer productoId;
-
-    @Column(name = "lote_id")
-    private Integer loteId;
-
     @Column(name = "cantidad", nullable = false)
     private BigDecimal cantidad;
 
     @Column(name = "fecha", nullable = false)
     private LocalDateTime fecha;
 
-    @Column(name = "usuario_id")
-    private Integer usuarioId;
-
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", insertable = false, updatable = false/*nullable = false*/)
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     public Dispensaciones() {}
 
-    public Dispensaciones(Integer beneficiarioId, Integer productoId, Integer loteId, BigDecimal cantidad, LocalDateTime fecha, Integer usuarioId) {
-        this.beneficiarioId = beneficiarioId;
-        this.productoId = productoId;
-        this.loteId = loteId;
+    public Dispensaciones(BigDecimal cantidad, LocalDateTime fecha, /*Beneficiarios beneficiarios, Producto producto,
+                            LotesProducto lotesProducto, */Usuario usuario) {
         this.cantidad = cantidad;
         this.fecha = fecha;
-        this.usuarioId = usuarioId;
+        /*this.beneficiarios = beneficiarios;
+        this.producto = producto;
+        this.lotesProducto = lotesProducto;*/
+        this.usuario = usuario;
     }
 
     public Integer getId() { return id; }
-    public Integer getBeneficiarioId() { return beneficiarioId; }
-    public void setBeneficiarioId(Integer beneficiarioId) { this.beneficiarioId = beneficiarioId; }
-    public Integer getProductoId() { return productoId; }
-    public void setProductoId(Integer productoId) { this.productoId = productoId; }
-    public Integer getLoteId() { return loteId; }
-    public void setLoteId(Integer loteId) { this.loteId = loteId; }
     public BigDecimal getCantidad() { return cantidad; }
     public void setCantidad(BigDecimal cantidad) { this.cantidad = cantidad; }
     public LocalDateTime getFecha() { return fecha; }
     public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
-    public Integer getUsuarioId() { return usuarioId; }
-    public void setUsuarioId(Integer usuarioId) { this.usuarioId = usuarioId; }
-
+    /*public Beneficiarios getBeneficiarios() { return beneficiarios; }
+    public void setBeneficiarios(Beneficiarios beneficiarios) { this.beneficiarios = beneficiarios; }
+    public Producto getProducto() { return producto; }
+    public void setProducto(Producto producto) { this.producto = producto; }
+    public LotesProducto getLotesProducto() { return lotesProducto; }
+    public void setLotesProducto(LotesProducto lotesProducto) { this.lotesProducto = lotesProducto; }*/
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 
     @Override
     public String toString() {
-        return String.format("Dispensacion[id=%d, beneficiarioId=%d, productoId=%d, cantidad=%s]", id, beneficiarioId, productoId, cantidad);
+        return String.format("Dispensacion[id=%d, cantidad=%s]", id, cantidad);
     }
 }

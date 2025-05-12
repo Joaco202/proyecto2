@@ -20,9 +20,6 @@ public class Ventas {
     @Column(name = "fecha_venta", nullable = false)
     private LocalDateTime fechaVenta;
 
-    @Column(name = "usuario_id")
-    private Integer usuarioId;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", insertable = false, updatable = false)
     private Usuario usuario;
@@ -32,10 +29,10 @@ public class Ventas {
 
     public Ventas() {}
 
-    public Ventas(Facturas factura, LocalDateTime fechaVenta, Integer usuarioId, BigDecimal montoTotal) {
+    public Ventas(Facturas factura, LocalDateTime fechaVenta, Usuario usuario, BigDecimal montoTotal) {
         this.factura = factura;
         this.fechaVenta = fechaVenta;
-        this.usuarioId = usuarioId;
+        this.usuario = usuario;
         this.montoTotal = montoTotal;
     }
 
@@ -47,10 +44,8 @@ public class Ventas {
     public LocalDateTime getFechaVenta() { return fechaVenta; }
     public void setFechaVenta(LocalDateTime fechaVenta) { this.fechaVenta = fechaVenta; }
 
-    public Integer getUsuarioId() { return usuarioId; }
-    public void setUsuarioId(Integer usuarioId) { this.usuarioId = usuarioId; }
-
     public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 
     public BigDecimal getMontoTotal() { return montoTotal; }
     public void setMontoTotal(BigDecimal montoTotal) { this.montoTotal = montoTotal; }
@@ -58,10 +53,10 @@ public class Ventas {
     @Override
     public String toString() {
         return String.format(
-                "Venta[id=%d, facturaId=%d, usuarioId=%d, fechaVenta=%s, montoTotal=%s]",
+                "Venta[id=%d, facturaId=%d, usuario=%d, fechaVenta=%s, montoTotal=%s]",
                 id,
                 factura != null ? factura.getId() : null,
-                usuarioId,
+                usuario != null ? usuario.getId() : null,
                 fechaVenta,
                 montoTotal
         );

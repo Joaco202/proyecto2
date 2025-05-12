@@ -38,11 +38,11 @@ public class DispensacionesService {
     public Dispensaciones actualizar(Integer id, Dispensaciones datos) {
         return repository.findById(id)
                    .map(existing -> {
-                       existing.setBeneficiarioId(datos.getBeneficiarioId());
-                       existing.setProductoId(datos.getProductoId());
+                       //existing.setBeneficiarios(datos.getBeneficiarios());
+                       //existing.setProducto(datos.getProducto());
                        existing.setCantidad(datos.getCantidad());
                        existing.setFecha(datos.getFecha());
-                       existing.setLoteId(datos.getLoteId());
+                       //existing.setLote(datos.getLote());
                        return repository.save(existing);
                    })
                    .orElseThrow(() -> new RuntimeException("Dispensación no encontrada"));

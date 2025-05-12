@@ -10,11 +10,7 @@ public class ElementosVenta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-
-    @Column(name = "lote_id")
-    private Integer loteId;
-
+    
     @Column(name = "cantidad", nullable = false)
     private BigDecimal cantidad;
 
@@ -24,30 +20,29 @@ public class ElementosVenta {
     @Column(name = "descuento", nullable = false)
     private BigDecimal descuento;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bodega_id", referencedColumnName = "id")
-    private Bodega bodega;
+    @ManyToOne
+    @JoinColumn(name = "lote_id", referencedColumnName = "id")
+    private LoteProducto lote;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "venta_id", nullable = false)
     private Ventas venta;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
 
     public ElementosVenta() {}
 
-    public ElementosVenta(Ventas venta, Producto producto, Integer loteId, BigDecimal cantidad,
-                          BigDecimal precio, BigDecimal descuento, Bodega bodega) {
+    public ElementosVenta(Ventas venta, Producto producto, BigDecimal cantidad,
+                          BigDecimal precio, BigDecimal descuento, LoteProducto lote) {
         this.venta = venta;
         this.producto = producto;
-        this.loteId = loteId;
+        this.lote = lote;
         this.cantidad = cantidad;
         this.precio = precio;
         this.descuento = descuento;
-        this.bodega = bodega;
     }
 
     public Integer getId() { return id; }
@@ -58,8 +53,8 @@ public class ElementosVenta {
     public Producto getProducto() { return producto; }
     public void setProducto(Producto producto) { this.producto = producto; }
 
-    public Integer getLoteId() { return loteId; }
-    public void setLoteId(Integer loteId) { this.loteId = loteId; }
+    public LoteProducto getLote() { return lote; }
+    public void setLote(LoteProducto lote) { this.lote = lote; }
 
     public BigDecimal getCantidad() { return cantidad; }
     public void setCantidad(BigDecimal cantidad) { this.cantidad = cantidad; }
@@ -70,17 +65,14 @@ public class ElementosVenta {
     public BigDecimal getDescuento() { return descuento; }
     public void setDescuento(BigDecimal descuento) { this.descuento = descuento; }
 
-    public Bodega getBodega() { return bodega; }
-    public void setBodega(Bodega bodega) { this.bodega = bodega; }
-
     @Override
     public String toString() {
-        return String.format("ElementoVenta[id=%d, ventaId=%d, productoId=%d, cantidad=%s, precio=%s, descuento=%s, bodega=%s]",
+        return String.format("ElementoVenta[id=%d, ventaId=%d, productoId=%d, cantidad=%s, precio=%s, descuento=%s, lote=%s]",
                 id,
                 venta != null ? venta.getId() : null,
                 producto != null ? producto.getId() : null,
                 cantidad, precio, descuento,
-                bodega != null ? bodega.getId() : "null");
+                lote != null ? lote.getId() : "null");
     }
 }
 

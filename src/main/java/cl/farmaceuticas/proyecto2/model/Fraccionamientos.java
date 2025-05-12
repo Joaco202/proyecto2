@@ -3,9 +3,6 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-
-
-
 @Entity
 @Table(name = "fraccionamientos")
 public class Fraccionamientos {
@@ -14,6 +11,12 @@ public class Fraccionamientos {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false)
+    private BigDecimal cantidad;
+
+    @Column(nullable = false)
+    private LocalDateTime fecha;
+
     @ManyToOne
     @JoinColumn(name = "producto_original_id", nullable = false)
     private Producto productoOriginal;
@@ -21,12 +24,6 @@ public class Fraccionamientos {
     @ManyToOne
     @JoinColumn(name = "producto_fraccion_id", nullable = false)
     private Producto productoFraccion;
-
-    @Column(nullable = false)
-    private BigDecimal cantidad;
-
-    @Column(nullable = false)
-    private LocalDateTime fecha;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")

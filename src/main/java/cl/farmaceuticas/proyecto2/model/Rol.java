@@ -24,10 +24,11 @@ public class Rol {
 
     public Rol() {}
 
-    public Rol(Long id, String nombre, String descripcion) {
+    public Rol(Long id, String nombre, String descripcion, Usuario usuario) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
+        this.usuarios.add(usuario);
     }
 
     public Long getId() {

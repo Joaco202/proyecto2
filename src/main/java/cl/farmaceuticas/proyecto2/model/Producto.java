@@ -1,6 +1,5 @@
 package cl.farmaceuticas.proyecto2.model;
 
-
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,8 +31,6 @@ public class Producto {
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
-
-
 
     public Producto() {}
 

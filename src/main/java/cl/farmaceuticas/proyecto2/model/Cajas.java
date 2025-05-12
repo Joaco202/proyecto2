@@ -15,9 +15,6 @@ public class Cajas {
     @Column(name = "fecha_registro", nullable = false)
     private LocalDate fechaRegistro;
 
-    /*@Column(name = "usuario_id")
-    private Integer usuarioId;*/
-
     @Column(name = "monto_inicial")
     private BigDecimal montoInicial;
 
@@ -31,11 +28,11 @@ public class Cajas {
     public Cajas() {
     }
 
-    public Cajas(LocalDate fechaRegistro, Integer usuarioId, BigDecimal montoInicial, BigDecimal montoFinal) {
+    public Cajas(LocalDate fechaRegistro, BigDecimal montoInicial, BigDecimal montoFinal, Usuario usuario) {
         this.fechaRegistro = fechaRegistro;
-        //this.usuarioId = usuarioId;
         this.montoInicial = montoInicial;
         this.montoFinal = montoFinal;
+        this.usuario = usuario;
     }
 
     public Integer getId() {
@@ -49,14 +46,6 @@ public class Cajas {
     public void setFechaRegistro(LocalDate fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     }
-
-    /*public Integer getUsuarioId() {
-        return usuarioId;
-    }
-
-    public void setUsuarioId(Integer usuarioId) {
-        this.usuarioId = usuarioId;
-    }*/
 
     public BigDecimal getMontoInicial() {
         return montoInicial;

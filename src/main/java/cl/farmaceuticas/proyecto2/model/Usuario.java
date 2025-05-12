@@ -62,7 +62,8 @@ public class Usuario {
 
     public Usuario() {}
 
-    public Usuario(String usuario, String claveHash, String nombre, String apellido, String correo, Rol rol) {
+    public Usuario(Integer id, String usuario, String claveHash, String nombre, String apellido, String correo, Rol rol) {
+        this.id = id;
         this.usuario = usuario;
         this.claveHash = claveHash;
         this.nombre = nombre;
@@ -73,6 +74,10 @@ public class Usuario {
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getUsuario() {

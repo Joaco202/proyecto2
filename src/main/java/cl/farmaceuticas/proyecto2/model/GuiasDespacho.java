@@ -57,7 +57,8 @@ public class GuiasDespacho {
 
     @Override
     public String toString() {
-        return String.format("GuiaDespacho[id=%d, numeroGuia='%s', fecha=%s]", id, numeroGuia, fecha);
+        return String.format("GuiaDespacho[id=%d, numeroGuia='%s', fecha=%s, facturaId=%d]", id, 
+                numeroGuia, fecha, factura != null ? factura.getId() : "null");
     }
 }
 

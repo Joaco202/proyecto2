@@ -13,9 +13,6 @@ public class TransaccionesCaja {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "caja_id", nullable = false)
-    private Integer cajaId;
-
     @Column(name = "tipo", nullable = false)
     private String tipo;
 
@@ -28,37 +25,38 @@ public class TransaccionesCaja {
     @Column(name = "fecha_transaccion", nullable = false)
     private LocalDateTime fechaTransaccion;
 
-    @Column(name = "usuario_id")
-    private Integer usuarioId;
+    /*@ManyToOne
+    @JoinColumn(name = "caja_id", nullable = false)
+    private Caja caja;*/
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", insertable = false, updatable = false/*nullable = false*/)
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     public TransaccionesCaja() {
     }
 
-    public TransaccionesCaja(Integer cajaId, String tipo, BigDecimal monto, String descripcion,
-            LocalDateTime fechaTransaccion, Integer usuarioId) {
-        this.cajaId = cajaId;
+    public TransaccionesCaja(/*Caja caja,*/ String tipo, BigDecimal monto, String descripcion,
+            LocalDateTime fechaTransaccion, Usuario usuario) {
+        //*this.caja = caja;
         this.tipo = tipo;
         this.monto = monto;
         this.descripcion = descripcion;
         this.fechaTransaccion = fechaTransaccion;
-        this.usuarioId = usuarioId;
+        this.usuario = usuario;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public Integer getCajaId() {
-        return cajaId;
+    /*public Caja getCaja() {
+        return caja;
     }
 
-    public void setCajaId(Integer cajaId) {
-        this.cajaId = cajaId;
-    }
+    public void setCaja(Caja caja) {
+        this.caja = caja;
+    }*/
 
     public String getTipo() {
         return tipo;
@@ -92,14 +90,6 @@ public class TransaccionesCaja {
         this.fechaTransaccion = fechaTransaccion;
     }
 
-    public Integer getUsuarioId() {
-        return usuarioId;
-    }
-
-    public void setUsuarioId(Integer usuarioId) {
-        this.usuarioId = usuarioId;
-    }
-
     public Usuario getUsuario() {
         return usuario;
     }
@@ -110,6 +100,6 @@ public class TransaccionesCaja {
 
     @Override
     public String toString() {
-        return String.format("TransaccionCaja[id=%d, cajaId=%d, tipo='%s', monto=%s]", id, cajaId, tipo, monto);
+        return String.format("TransaccionCaja[id=%d, /*cajaId=%d, tipo='%s', monto=%s]", id, /*caja,*/ tipo, monto);
     }
 }

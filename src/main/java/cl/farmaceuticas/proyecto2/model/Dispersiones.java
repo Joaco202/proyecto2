@@ -16,47 +16,32 @@ public class Dispersiones {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "beneficiario_id", nullable = false)
-    private Integer beneficiarioId;
-
     @Column(name = "monto")
     private BigDecimal monto;
 
     @Column(name = "fecha", nullable = false)
     private LocalDateTime fecha;
 
-    @Column(name = "usuario_id")
-    private Integer usuarioId;
-
     @Column(name = "estado", nullable = false)
     private String estado;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", insertable = false, updatable = false/*nullable = false*/)
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     public Dispersiones() {
     }
 
-    public Dispersiones(Integer beneficiarioId, BigDecimal monto, LocalDateTime fecha, Integer usuarioId,
-            String estado) {
-        this.beneficiarioId = beneficiarioId;
+    public Dispersiones(BigDecimal monto, LocalDateTime fecha, String estado, /*Beneficiarios beneficiarios, */Usuario usuario) {
         this.monto = monto;
         this.fecha = fecha;
-        this.usuarioId = usuarioId;
         this.estado = estado;
+        //this.beneficiarios = beneficiarios;
+        this.usuario = usuario;
     }
 
     public Integer getId() {
         return id;
-    }
-
-    public Integer getBeneficiarioId() {
-        return beneficiarioId;
-    }
-
-    public void setBeneficiarioId(Integer beneficiarioId) {
-        this.beneficiarioId = beneficiarioId;
     }
 
     public BigDecimal getMonto() {
@@ -75,14 +60,6 @@ public class Dispersiones {
         this.fecha = fecha;
     }
 
-    public Integer getUsuarioId() {
-        return usuarioId;
-    }
-
-    public void setUsuarioId(Integer usuarioId) {
-        this.usuarioId = usuarioId;
-    }
-
     public String getEstado() {
         return estado;
     }
@@ -95,13 +72,20 @@ public class Dispersiones {
         return usuario;
     }
 
+    /*public void setBeneficiarios(Beneficiarios beneficiarios) {
+        //this.beneficiarios = beneficiarios;
+    }*/
+
+    /*public Beneficiarios getBeneficiarios() {
+        return beneficiarios;
+    }*/
+
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
 
     @Override
     public String toString() {
-        return String.format("Dispersion[id=%d, beneficiarioId=%d, monto=%s, estado='%s']", id, beneficiarioId, monto,
-                estado);
+        return String.format("Dispersion[id=%d, monto=%s, estado='%s', usuario=%s]", id, monto, estado, usuario);
     }
 }

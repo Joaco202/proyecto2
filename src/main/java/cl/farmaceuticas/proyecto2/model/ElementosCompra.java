@@ -2,7 +2,6 @@ package cl.farmaceuticas.proyecto2.model;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
-
 @Entity
 @Table(name = "elementos_compra")
 public class ElementosCompra {
@@ -54,11 +53,8 @@ public class ElementosCompra {
     @Override
     public String toString() {
         return String.format("ElementoCompra[id=%d, compra=%s, producto=%s, cantidad=%s, precio=%s]",
-                id,
-                compra != null ? compra.getId() : "null",
-                producto != null ? producto.getId() : "null",
-                cantidad,
-                precio);
+                id, compra != null ? compra.getId() : "null",
+                producto != null ? producto.getId() : "null", cantidad, precio);
     }
 }
 

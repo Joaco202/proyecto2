@@ -14,9 +14,6 @@ public class ReglasAlerta {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "producto_id", nullable = false)
-    private Integer productoId;
-
     @Column(name = "intervalo_dias")
     private Integer intervaloDias;
 
@@ -26,10 +23,14 @@ public class ReglasAlerta {
     @Column(name = "activo", nullable = false)
     private Boolean activo;
 
+    @ManyToOne
+    @JoinColumn(name = "producto_id", nullable = false)
+    private Producto producto;
+
     public ReglasAlerta() {}
 
-    public ReglasAlerta(Integer productoId, Integer intervaloDias, BigDecimal umbralCantidad, Boolean activo) {
-        this.productoId = productoId;
+    public ReglasAlerta(Producto producto, Integer intervaloDias, BigDecimal umbralCantidad, Boolean activo) {
+        this.producto = producto;
         this.intervaloDias = intervaloDias;
         this.umbralCantidad = umbralCantidad;
         this.activo = activo;
@@ -39,12 +40,12 @@ public class ReglasAlerta {
         return id;
     }
 
-    public Integer getProductoId() {
-        return productoId;
+    public Producto getProducto() {
+        return producto;
     }
 
-    public void setProductoId(Integer productoId) {
-        this.productoId = productoId;
+    public void setProducto(Producto producto) {
+        this.producto = producto;
     }
 
     public Integer getIntervaloDias() {
@@ -73,6 +74,6 @@ public class ReglasAlerta {
 
     @Override
     public String toString() {
-        return String.format("ReglaAlerta[id=%d, productoId=%d, intervaloDias=%d, umbralCantidad=%s, activo=%s]", id, productoId, intervaloDias, umbralCantidad, activo);
+        return String.format("ReglaAlerta[id=%d, producto=%s, intervaloDias=%d, umbralCantidad=%s, activo=%s]", id, producto, intervaloDias, umbralCantidad, activo);
     }
 }

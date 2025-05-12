@@ -17,12 +17,16 @@ public class HistorialPacientes {
     @Column(name = "datos_historial")
     private String datosHistorial;
 
+    @Column(name = "fecha_registro")
+    private String fechaRegistro;
+
     public HistorialPacientes() {
     }
 
-    public HistorialPacientes(Beneficiarios beneficiario, String datosHistorial) {
+    public HistorialPacientes(Beneficiarios beneficiario, String datosHistorial, String fechaRegistro) {
         this.beneficiario = beneficiario;
         this.datosHistorial = datosHistorial;
+        this.fechaRegistro = fechaRegistro;
     }
 
     public Integer getId() {
@@ -47,5 +51,19 @@ public class HistorialPacientes {
 
     public void setDatosHistorial(String datosHistorial) {
         this.datosHistorial = datosHistorial;
+    }
+
+    public String getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(String fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
+    @Override
+    public String toString() {
+        return "HistorialPacientes{" + "id=" + id + ", beneficiario=" + beneficiario +
+                ", datosHistorial='" + datosHistorial + '\'' + ", fechaRegistro='" + fechaRegistro + '\'' + '}';
     }
 }

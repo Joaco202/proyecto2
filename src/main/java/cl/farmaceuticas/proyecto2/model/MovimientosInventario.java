@@ -13,15 +13,6 @@ public class MovimientosInventario {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "producto_id", nullable = false)
-    private Integer productoId;
-
-    @Column(name = "lote_id")
-    private Integer loteId;
-
-    @Column(name = "bodega_id", nullable = false)
-    private Integer bodegaId;
-
     @Column(name = "tipo_movimiento", nullable = false)
     private String tipoMovimiento;
 
@@ -37,9 +28,6 @@ public class MovimientosInventario {
     @Column(name = "fecha_movimiento", nullable = false)
     private LocalDateTime fechaMovimiento;
 
-    @Column(name = "usuario_id")
-    private Integer usuarioId;
-
     // Relaciones
     @ManyToOne
     @JoinColumn(name = "producto_id", insertable = false, updatable = false)
@@ -53,22 +41,22 @@ public class MovimientosInventario {
     @JoinColumn(name = "bodega_id", insertable = false, updatable = false)
     private Bodega bodega;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", insertable = false, updatable = false)
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     public MovimientosInventario() {}
 
-    public MovimientosInventario(Integer productoId, Integer loteId, Integer bodegaId, String tipoMovimiento,
-                                 String moduloReferencia, Integer idReferencia, BigDecimal cantidad, Integer usuarioId) {
-        this.productoId = productoId;
-        this.loteId = loteId;
-        this.bodegaId = bodegaId;
+    public MovimientosInventario(Producto producto, LoteProducto lote, Bodega bodega, String tipoMovimiento,
+                                 String moduloReferencia, Integer idReferencia, BigDecimal cantidad, Usuario usuario) {
+        this.producto = producto;
+        this.lote = lote;
+        this.bodega = bodega;
         this.tipoMovimiento = tipoMovimiento;
         this.moduloReferencia = moduloReferencia;
         this.idReferencia = idReferencia;
         this.cantidad = cantidad;
-        this.usuarioId = usuarioId;
+        this.usuario = usuario;
         this.fechaMovimiento = LocalDateTime.now();
     }
 
@@ -76,29 +64,29 @@ public class MovimientosInventario {
         return id;
     }
 
-    public Integer getProductoId() {
-        return productoId;
+    /*public Producto getProducto() {
+        return producto;
     }
 
-    public void setProductoId(Integer productoId) {
-        this.productoId = productoId;
+    public void setProducto(Producto producto) {
+        this.producto = producto;
     }
 
-    public Integer getLoteId() {
-        return loteId;
+    public LoteProducto getLote() {
+        return lote;
     }
 
-    public void setLoteId(Integer loteId) {
-        this.loteId = loteId;
+    public void setLote(LoteProducto lote) {
+        this.lote = lote;
+    }*/
+
+    /*public Bodega getBodega() {
+        return bodega;
     }
 
-    public Integer getBodegaId() {
-        return bodegaId;
-    }
-
-    public void setBodegaId(Integer bodegaId) {
-        this.bodegaId = bodegaId;
-    }
+    public void setBodega(Bodega bodega) {
+        this.bodega = bodega;
+    }*/
 
     public String getTipoMovimiento() {
         return tipoMovimiento;
@@ -140,29 +128,8 @@ public class MovimientosInventario {
         this.fechaMovimiento = fechaMovimiento;
     }
 
-    public Integer getUsuarioId() {
-        return usuarioId;
-    }
-
-    public void setUsuarioId(Integer usuarioId) {
-        this.usuarioId = usuarioId;
-    }
-
-    // Getters para las relaciones
-    public Producto getProducto() {
-        return producto;
-    }
-
-    public LoteProducto getLote() {
-        return lote;
-    }
-
-    public Bodega getBodega() {
-        return bodega;
-    }
-
     public Usuario getUsuario() {
-    return usuario;
+        return usuario;
     }
 
     public void setUsuario(Usuario usuario) {
@@ -172,8 +139,8 @@ public class MovimientosInventario {
     @Override
     public String toString() {
         return String.format(
-                "MovimientoInventario[id=%d, productoId=%d, tipo='%s', cantidad=%s]",
-                id, productoId, tipoMovimiento, cantidad
+                "MovimientoInventario[id=%d, producto=%s, tipo='%s', cantidad=%s]",
+                id, producto, tipoMovimiento, cantidad
         );
     }
 }

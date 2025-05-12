@@ -33,10 +33,10 @@ public class DispersionesService {
     public Optional<Dispersiones> update(Integer id, Dispersiones newData) {
         return dispersionesRepository.findById(id)
                 .map(existing -> {
-                    existing.setBeneficiarioId(newData.getBeneficiarioId());
+                    //existing.setBeneficiarios(newData.getBeneficiarios());
                     existing.setMonto(newData.getMonto());
                     existing.setFecha(newData.getFecha());
-                    existing.setUsuarioId(newData.getUsuarioId());
+                    existing.setUsuario(newData.getUsuario());
                     existing.setEstado(newData.getEstado());
                     return dispersionesRepository.save(existing);
                 });
