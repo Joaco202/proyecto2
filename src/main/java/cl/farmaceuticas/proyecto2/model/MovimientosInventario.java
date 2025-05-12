@@ -53,7 +53,7 @@ public class MovimientosInventario {
     @JoinColumn(name = "bodega_id", insertable = false, updatable = false)
     private Bodega bodega;
 
-    @ManyToOne
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", insertable = false, updatable = false)
     private Usuario usuario;
 
@@ -162,7 +162,11 @@ public class MovimientosInventario {
     }
 
     public Usuario getUsuario() {
-        return usuario;
+    return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     @Override

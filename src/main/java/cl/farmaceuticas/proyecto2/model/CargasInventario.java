@@ -14,7 +14,7 @@ public class CargasInventario {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
+    @JoinColumn(name = "usuario_id", insertable = false, nullable = false)
     private Usuario usuario;
 
     @ManyToOne

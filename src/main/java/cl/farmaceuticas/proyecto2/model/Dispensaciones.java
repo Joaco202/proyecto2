@@ -33,6 +33,10 @@ public class Dispensaciones {
     @Column(name = "usuario_id")
     private Integer usuarioId;
 
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", insertable = false, updatable = false/*nullable = false*/)
+    private Usuario usuario;
+
     public Dispensaciones() {}
 
     public Dispensaciones(Integer beneficiarioId, Integer productoId, Integer loteId, BigDecimal cantidad, LocalDateTime fecha, Integer usuarioId) {
@@ -57,6 +61,9 @@ public class Dispensaciones {
     public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
     public Integer getUsuarioId() { return usuarioId; }
     public void setUsuarioId(Integer usuarioId) { this.usuarioId = usuarioId; }
+
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 
     @Override
     public String toString() {
