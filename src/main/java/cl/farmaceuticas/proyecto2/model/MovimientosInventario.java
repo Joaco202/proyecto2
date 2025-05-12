@@ -64,7 +64,7 @@ public class MovimientosInventario {
         return id;
     }
 
-    /*public Producto getProducto() {
+    public Producto getProducto() {
         return producto;
     }
 
@@ -78,15 +78,15 @@ public class MovimientosInventario {
 
     public void setLote(LoteProducto lote) {
         this.lote = lote;
-    }*/
+    }
 
-    /*public Bodega getBodega() {
+    public Bodega getBodega() {
         return bodega;
     }
 
     public void setBodega(Bodega bodega) {
         this.bodega = bodega;
-    }*/
+    }
 
     public String getTipoMovimiento() {
         return tipoMovimiento;

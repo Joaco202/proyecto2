@@ -33,7 +33,7 @@ public class VentasService {
         return repository.findById(id)
                 .map(existing -> {
                     existing.setFechaVenta(datos.getFechaVenta());
-                    existing.setUsuarioId(datos.getUsuarioId());
+                    existing.setUsuario(datos.getUsuario());
                     existing.setMontoTotal(datos.getMontoTotal());
                     return repository.save(existing);
                 })

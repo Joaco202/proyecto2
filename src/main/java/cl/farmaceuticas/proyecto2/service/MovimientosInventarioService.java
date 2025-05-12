@@ -37,17 +37,21 @@ public class MovimientosInventarioService {
     public Optional<MovimientosInventario> update(Integer id, MovimientosInventario newData) {
         return movimientosInventarioRepository.findById(id)
                 .map(existing -> {
-                    existing.setProductoId(newData.getProductoId());
-                    existing.setLoteId(newData.getLoteId());
-                    existing.setBodegaId(newData.getBodegaId());
+                    existing.setProducto(newData.getProducto());
+                    existing.setLote(newData.getLote());
+                    existing.setBodega(newData.getBodega());
                     existing.setTipoMovimiento(newData.getTipoMovimiento());
                     existing.setModuloReferencia(newData.getModuloReferencia());
                     existing.setIdReferencia(newData.getIdReferencia());
                     existing.setCantidad(newData.getCantidad());
-                    existing.setUsuarioId(newData.getUsuarioId());
+                    existing.setUsuario(newData.getUsuario());
                     return movimientosInventarioRepository.save(existing);
                 });
     }
+
+
+
+
 
     public void delete(Integer id) {
         movimientosInventarioRepository.deleteById(id);

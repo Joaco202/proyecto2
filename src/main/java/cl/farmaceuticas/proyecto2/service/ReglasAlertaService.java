@@ -31,7 +31,7 @@ public class ReglasAlertaService {
     public ReglasAlerta update(Integer id, ReglasAlerta datos) {
         return repository.findById(id)
                 .map(existing -> {
-                    existing.setProductoId(datos.getProductoId());
+                    existing.setProducto(datos.getProducto());
                     existing.setIntervaloDias(datos.getIntervaloDias());
                     existing.setUmbralCantidad(datos.getUmbralCantidad());
                     existing.setActivo(datos.getActivo());

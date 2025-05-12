@@ -10,7 +10,7 @@ import java.util.Optional;
 @Service
 public class TransaccionesCajaService {
 
-    @Autowired
+
     private final TransaccionesCajaRepository repository;
 
     public TransaccionesCajaService(TransaccionesCajaRepository repository) {
@@ -35,7 +35,7 @@ public class TransaccionesCajaService {
                     existing.setTipo(datos.getTipo());
                     existing.setMonto(datos.getMonto());
                     existing.setDescripcion(datos.getDescripcion());
-                    existing.setUsuarioId(datos.getUsuarioId());
+                    existing.setUsuario(datos.getUsuario());
                     return repository.save(existing);
                 })
                 .orElseThrow(() -> new RuntimeException("Transacción no encontrada"));

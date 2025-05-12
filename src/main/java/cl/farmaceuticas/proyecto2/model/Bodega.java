@@ -67,6 +67,8 @@ public class Bodega {
         return fechaCreacion;
     }
 
+    public void setId(Integer id) {this.id = id; } //Solo para testing
+
     @Override
     public String toString() {
         return String.format("Bodega[id=%d, nombre='%s']", id, nombre);
