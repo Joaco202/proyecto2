@@ -1,0 +1,44 @@
+version: "3.8"
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      # Ajusta estas variables si las parametrizas en tu application.properties
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/proyecto2
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpwd
+      MYSQL_DATABASE: farmaceutica
+      MYSQL_USER: usuario
+      MYSQL_PASSWORD: usuariopwd
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8083:80"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
