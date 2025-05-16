@@ -25,6 +25,7 @@ services:
       MYSQL_PASSWORD: usuariopwd
     volumes:
       - db_data:/var/lib/mysql
+      - ./farmaceutica.sql:/docker-entrypoint-initdb.d/farmaceutica.sql
     ports:
       - "3306:3306"
 
@@ -34,7 +35,7 @@ services:
     environment:
       PMA_HOST: db
       PMA_USER: root
-      PMA_PASSWORD: root
+      PMA_PASSWORD: rootpwd
     ports:
       - "8083:80"
     depends_on:
@@ -42,3 +43,5 @@ services:
 
 volumes:
   db_data:
+
+
