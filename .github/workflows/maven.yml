@@ -14,32 +14,48 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpwd
+          MYSQL_DATABASE: farmaceutica
+          MYSQL_USER: usuario
+          MYSQL_PASSWORD: usuariopwd
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+        # <-- elimina ports: - 3306:3306
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      
+uses: actions/checkout@v4,
 
-      - name: Set up JDK 21 & cache Maven deps
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '21'            # ← aquí cambias de 17 a 21
-          cache: maven
+      
+uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: '21'
+        cache: maven,
 
-      - name: Build & run tests
-        run: mvn clean verify --batch-mode
+      
+name: Wait for MySQL to be ready
+      run: |
+        for i in {1..30}; do
+          if mysqladmin ping -h mysql --silent; then
+            echo "MySQL is up!"
+            break
+          fi
+          echo "Waiting for MySQL..."
+          sleep 2
+        done,
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-            username: ${{ secrets.DOCKERHUB_USERNAME }}
-            password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build & push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: Dockerfile
-          push: true
-          tags: |
-            ${{ env.IMAGE_NAME }}:latest
-            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+      
+name: Build & run tests
+      env:
+        SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/farmaceutica
+        SPRING_DATASOURCE_USERNAME: usuario
+        SPRING_DATASOURCE_PASSWORD: usuariopwd
+      run: mvn clean verify --batch-mode
