@@ -3,51 +3,41 @@ package cl.farmaceuticas.proyecto2.controller;
 import cl.farmaceuticas.proyecto2.model.Producto;
 import cl.farmaceuticas.proyecto2.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
-@RestController
-@RequestMapping("/api/productos")
+@Controller
 public class ProductoController {
 
+    private final ProductoService productoService;
+
     @Autowired
-    private ProductoService productoService;
-
-    @GetMapping
-    public ResponseEntity<List<Producto>> findAll() {
-        List<Producto> productos = productoService.findAll();
-        return new ResponseEntity<>(productos, HttpStatus.OK);
+    public ProductoController(ProductoService productoService) {
+        this.productoService = productoService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Producto> findById(@PathVariable Integer id) {
-        Optional<Producto> producto = productoService.findById(id);
-        return producto.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    /**
+     * Muestra la página principal (index.html) con:
+     * - lista de productos en "productos"
+     * - un objeto vacío "producto" para el formulario
+     */
+    @GetMapping("/")
+    public String mostrarIndex(Model model) {
+        model.addAttribute("productos", productoService.findAll());
+        model.addAttribute("producto", new Producto());
+        return "index"; // Thymeleaf buscará src/main/resources/templates/index.html
     }
 
-    @PostMapping
-    public ResponseEntity<Producto> create(@RequestBody Producto producto) {
-        Producto created = productoService.save(producto);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Producto> update(@PathVariable Integer id, @RequestBody Producto producto) {
-        Optional<Producto> existing = productoService.findById(id);
-        if (existing.isPresent()) {
-            Producto updated = productoService.update(id, producto);
-            return new ResponseEntity<>(updated, HttpStatus.OK);
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        productoService.delete(id);
-        return ResponseEntity.noContent().build();
+    /**
+     * Procesa el POST del formulario de creación.
+     * Coincide con th:action="@{/productos/guardar}"
+     */
+    @PostMapping("/productos/guardar")
+    public String guardarProducto(@ModelAttribute("producto") Producto producto) {
+        productoService.save(producto);
+        return "redirect:/";  // recarga la lista en la raíz
     }
 }
