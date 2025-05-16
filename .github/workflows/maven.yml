@@ -1,3 +1,4 @@
+# .github/workflows/ci-docker.yml
 name: CI · Build & Push Docker Image
 
 on:
@@ -17,11 +18,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17 & cache Maven deps
+      - name: Set up JDK 21 & cache Maven deps
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: '21'            # ← aquí cambias de 17 a 21
           cache: maven
 
       - name: Build & run tests
