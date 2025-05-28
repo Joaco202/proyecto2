@@ -31,8 +31,24 @@ public class ProductoController {
 
     @PostMapping
     public ResponseEntity<Producto> create(@RequestBody Producto producto) {
-        Producto created = productoService.save(producto);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+        // Verifica que no venga nulo algún campo obligatorio
+        if (producto.getCodigo() == null || producto.getNombre() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        // Valor por defecto para campos obligatorios
+        if (producto.getActivo() == null) {
+            producto.setActivo(true); // o false según tu lógica
+        }
+
+
+        try {
+            Producto created = productoService.save(producto);
+            return new ResponseEntity<>(created, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace(); // Muestra error en consola
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PutMapping("/{id}")
