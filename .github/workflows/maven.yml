@@ -87,8 +87,8 @@ jobs:
           git clone https://x-access-token:${{ secrets.CD_REPO_TOKEN }}@github.com/Joaco202/Proyecto2-CI.git cd-repo
           cd cd-repo
 
-          sed -i "s|image: gcr.io/deep-theorem-461601-j3/mi-aplicacion:.*|image: gcr.io/deep-theorem-461601-j3/mi-aplicacion:$TAG|g" k8s/deployment.yaml
+          sed -i "s|image: gcr.io/deep-theorem-461601-j3/mi-aplicacion:.*|image: gcr.io/deep-theorem-461601-j3/mi-aplicacion:$TAG|g" mi-aplicacion/deployment.yaml
 
-          git add k8s/deployment.yaml
+          git add mi-aplicacion/deployment.yaml
           git commit -m "Actualiza tag de imagen a $TAG desde CI"
           git push origin main
