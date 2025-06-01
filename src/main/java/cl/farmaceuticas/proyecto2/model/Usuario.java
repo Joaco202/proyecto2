@@ -191,6 +191,14 @@ public class Usuario {
     public void setTransaccionesCaja(List<TransaccionesCaja> transaccionesCaja) {
         this.transaccionesCaja = transaccionesCaja;
     }
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public void setFechaModificacion(LocalDateTime fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
+    }
+
 
     @Override
     public String toString() {

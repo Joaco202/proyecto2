@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Registro de Usuario</title>
+</head>
+<body>
+<h2>Registro de Usuario</h2>
+
+<input type="text" id="usuario" placeholder="Usuario" required /><br />
+<input type="password" id="clave" placeholder="Contraseña" required /><br />
+<input type="text" id="nombre" placeholder="Nombre" /><br />
+<input type="text" id="apellido" placeholder="Apellido" /><br />
+<input type="email" id="correo" placeholder="Correo electrónico" /><br />
+<input type="text" id="rol" placeholder="Rol (ej: Administrador)" /><br />
+
+<button id="btnRegistrar">Registrar</button>
+<p id="mensaje" style="color:red;"></p>
+
+<script>
+    async function registrar() {
+        const usuario = document.getElementById("usuario").value.trim();
+        const clave = document.getElementById("clave").value.trim();
+
+        if (!usuario || !clave) {
+            document.getElementById("mensaje").textContent = "Usuario y contraseña son obligatorios.";
+            return;
+        }
+
+        const data = {
+            usuario: usuario,
+            claveHash: clave, // CAMBIO AQUÍ
+            nombre: document.getElementById("nombre").value.trim(),
+            apellido: document.getElementById("apellido").value.trim(),
+            correo: document.getElementById("correo").value.trim(),
+            rol: document.getElementById("rol").value.trim()
+        };
+
+
+        try {
+            const res = await fetch("http://localhost:8080/api/register", { // pon tu URL exacta con puerto
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+
+            const result = await res.json();
+
+            if (!res.ok) {
+                throw new Error(result.error || "Error desconocido");
+            }
+
+            document.getElementById("mensaje").style.color = "green";
+            document.getElementById("mensaje").textContent = result.mensaje || "Registro exitoso.";
+            // Opcional: limpiar inputs
+            document.querySelectorAll("input").forEach(input => input.value = "");
+
+        } catch (error) {
+            document.getElementById("mensaje").style.color = "red";
+            document.getElementById("mensaje").textContent = "Error: " + error.message;
+            console.error(error);
+        }
+    }
+
+    document.getElementById("btnRegistrar").addEventListener("click", registrar);
+</script>
+</body>
+</html>
