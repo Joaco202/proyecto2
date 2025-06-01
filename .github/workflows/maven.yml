@@ -8,7 +8,7 @@ on:
     branches: [ main ]
 
 env:
-  #IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/proyecto2-app
+  # eliminar creo --> IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/proyecto2-app
   IMAGE_NAME: gcr.io/deep-theorem-461601-j3/mi-aplicacion
 
 jobs:
