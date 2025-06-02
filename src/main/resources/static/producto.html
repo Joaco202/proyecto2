@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Crear Producto</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; }
+        div.field { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.3rem; }
+        input, textarea { width: 100%; padding: 0.5rem; font-size: 1rem; }
+        button { padding: 0.7rem 1.2rem; font-size: 1rem; }
+        .msg { margin-top: 1rem; }
+        table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
+        th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
+        th { background-color: #f0f0f0; }
+        button.edit, button.delete {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.9rem;
+            margin-right: 0.3rem;
+        }
+        button.delete { background-color: #e74c3c; color: white; border: none; }
+        button.edit { background-color: #3498db; color: white; border: none; }
+    </style>
+</head>
+<body>
+<h1>Nuevo Producto</h1>
+<form id="productoForm">
+    <div class="field">
+        <label for="codigo">Código</label>
+        <input type="text" id="codigo" required />
+    </div>
+    <div class="field">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" required />
+    </div>
+    <div class="field">
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion"></textarea>
+    </div>
+    <div class="field">
+        <label for="unidad">Unidad</label>
+        <input type="text" id="unidad" />
+    </div>
+    <div class="field">
+        <label>
+            <input type="checkbox" id="activo" checked />
+            Activo
+        </label>
+    </div>
+    <button type="submit" id="submitBtn">Crear</button>
+    <button type="button" id="cancelEditBtn" style="display:none; margin-left: 10px;">Cancelar edición</button>
+</form>
+<div class="msg" id="mensaje"></div>
+
+<h2>Lista de Productos</h2>
+<div id="listaProductos"></div>
+
+<script>
+    let editId = null;
+
+    async function cargarProductos() {
+        const cont = document.getElementById('listaProductos');
+        cont.innerHTML = 'Cargando productos...';
+
+        try {
+            const res = await fetch('/api/productos');
+            if (!res.ok) throw new Error('Error al cargar productos');
+            const productos = await res.json();
+
+            if (productos.length === 0) {
+                cont.innerHTML = '<p>No hay productos registrados.</p>';
+                return;
+            }
+
+            let tabla = '<table><thead><tr><th>Código</th><th>Nombre</th><th>Descripción</th><th>Unidad</th><th>Activo</th><th>Acciones</th></tr></thead><tbody>';
+
+            productos.forEach(p => {
+                tabla += `<tr>
+                    <td>${p.codigo}</td>
+                    <td>${p.nombre}</td>
+                    <td>${p.descripcion || ''}</td>
+                    <td>${p.unidad || ''}</td>
+                    <td>${p.activo ? 'Sí' : 'No'}</td>
+                    <td>
+                        <button class="edit" data-id="${p.id}">Editar</button>
+                        <button class="delete" data-id="${p.id}">Eliminar</button>
+                    </td>
+                </tr>`;
+            });
+
+            tabla += '</tbody></table>';
+            cont.innerHTML = tabla;
+
+            // Asignar eventos a botones
+            document.querySelectorAll('button.edit').forEach(btn => btn.onclick = editarProducto);
+            document.querySelectorAll('button.delete').forEach(btn => btn.onclick = eliminarProducto);
+
+        } catch (error) {
+            cont.innerHTML = `<p style="color:red;">${error.message}</p>`;
+        }
+    }
+
+    async function eliminarProducto(e) {
+        const id = e.target.dataset.id;
+        if (!confirm('¿Seguro que deseas eliminar este producto?')) return;
+
+        try {
+            const res = await fetch(`/api/productos/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                mostrarMensaje('Producto eliminado correctamente', 'green');
+                cargarProductos();
+                if(editId === id) cancelarEdicion();
+            } else {
+                mostrarMensaje(`Error al eliminar producto (${res.status})`, 'crimson');
+            }
+        } catch {
+            mostrarMensaje('Error de conexión al eliminar producto', 'crimson');
+        }
+    }
+
+    async function editarProducto(e) {
+        const id = e.target.dataset.id;
+        try {
+            const res = await fetch(`/api/productos/${id}`);
+            if (!res.ok) {
+                mostrarMensaje(`Error al obtener producto (${res.status})`, 'crimson');
+                return;
+            }
+            const p = await res.json();
+            document.getElementById('codigo').value = p.codigo;
+            document.getElementById('nombre').value = p.nombre;
+            document.getElementById('descripcion').value = p.descripcion || '';
+            document.getElementById('unidad').value = p.unidad || '';
+            document.getElementById('activo').checked = p.activo;
+
+            editId = id;
+            document.getElementById('submitBtn').textContent = 'Guardar cambios';
+            document.getElementById('cancelEditBtn').style.display = 'inline-block';
+            window.scrollTo(0, 0);
+        } catch {
+            mostrarMensaje('Error al cargar datos del producto', 'crimson');
+        }
+    }
+
+    function cancelarEdicion() {
+        editId = null;
+        document.getElementById('productoForm').reset();
+        document.getElementById('submitBtn').textContent = 'Crear';
+        document.getElementById('cancelEditBtn').style.display = 'none';
+        mostrarMensaje('', '');
+    }
+
+    function mostrarMensaje(msg, color) {
+        const msgEl = document.getElementById('mensaje');
+        msgEl.textContent = msg;
+        msgEl.style.color = color || 'black';
+    }
+
+    document.getElementById('cancelEditBtn').addEventListener('click', cancelarEdicion);
+
+    document.getElementById('productoForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const payload = {
+            codigo:      document.getElementById('codigo').value.trim(),
+            nombre:      document.getElementById('nombre').value.trim(),
+            descripcion: document.getElementById('descripcion').value.trim(),
+            unidad:      document.getElementById('unidad').value.trim(),
+            activo:      document.getElementById('activo').checked
+        };
+
+        let url = '/api/productos';
+        let method = 'POST';
+
+        if (editId) {
+            url += '/' + editId;
+            method = 'PUT';
+        }
+
+        try {
+            const res = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                if (method === 'POST') {
+                    const prod = await res.json();
+                    mostrarMensaje(`✔ Producto creado con ID ${prod.id}`, 'green');
+                } else {
+                    mostrarMensaje('✔ Producto actualizado correctamente', 'green');
+                }
+                this.reset();
+                editId = null;
+                document.getElementById('submitBtn').textContent = 'Crear';
+                document.getElementById('cancelEditBtn').style.display = 'none';
+                cargarProductos();
+            } else if (res.status === 400) {
+                mostrarMensaje('⚠ Error: código duplicado o datos inválidos', 'crimson');
+            } else {
+                mostrarMensaje(`⚠ Error inesperado (${res.status})`, 'crimson');
+            }
+        } catch (err) {
+            mostrarMensaje('⚠ No se pudo conectar al servidor.', 'crimson');
+            console.error(err);
+        }
+    });
+
+    // Cargar productos al inicio
+    cargarProductos();
+</script>
+</body>
+</html>

@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/beneficiarios")
-@CrossOrigin(origins = "*") // Opcional: permite solicitudes desde otros dominios
+@CrossOrigin(origins = "*")
 public class BeneficiariosController {
 
     private final BeneficiariosService beneficiariosService;
@@ -20,34 +20,28 @@ public class BeneficiariosController {
         this.beneficiariosService = beneficiariosService;
     }
 
-    // Obtener todos los beneficiarios
     @GetMapping
     public List<Beneficiarios> getAll() {
-        return beneficiariosService.findAll();
+        return beneficiariosService.getAll();
     }
 
-    // Obtener un beneficiario por ID
-    @GetMapping("/{id}")
-    public Optional<Beneficiarios> getById(@PathVariable Integer id) {
-        return beneficiariosService.findById(id);
+    @GetMapping("/{rut}")
+    public Optional<Beneficiarios> getByRut(@PathVariable String rut) {
+        return beneficiariosService.getByRut(rut);
     }
 
-    // Crear un nuevo beneficiario
     @PostMapping
     public Beneficiarios create(@RequestBody Beneficiarios beneficiario) {
         return beneficiariosService.create(beneficiario);
     }
 
-    // Actualizar un beneficiario existente
-    @PutMapping("/{id}")
-    public Optional<Beneficiarios> update(@PathVariable Integer id, @RequestBody Beneficiarios beneficiario) {
-        return beneficiariosService.update(id, beneficiario);
+    @PutMapping("/{rut}")
+    public Optional<Beneficiarios> update(@PathVariable String rut, @RequestBody Beneficiarios beneficiario) {
+        return beneficiariosService.update(rut, beneficiario);
     }
 
-    // Eliminar un beneficiario
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) {
-        beneficiariosService.delete(id);
+    @DeleteMapping("/{rut}")
+    public void delete(@PathVariable String rut) {
+        beneficiariosService.delete(rut);
     }
 }
-

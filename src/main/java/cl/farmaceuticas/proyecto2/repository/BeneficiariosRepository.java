@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BeneficiariosRepository extends JpaRepository<Beneficiarios, Long> {
-
+public interface BeneficiariosRepository extends JpaRepository<Beneficiarios, String> {
 }
+

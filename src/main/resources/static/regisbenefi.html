@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Beneficiario</title>
+</head>
+<body>
+<h1>Formulario de Registro de Beneficiario</h1>
+<form id="formBeneficiario">
+    <input type="text" id="rut" placeholder="RUT" required><br>
+    <input type="text" id="nombre" placeholder="Nombre" required><br>
+    <input type="text" id="apellido" placeholder="Apellido" required><br>
+    <input type="date" id="fechaNacimiento" required><br>
+    <select id="sexo">
+        <option value="Masculino">Masculino</option>
+        <option value="Femenino">Femenino</option>
+        <option value="Otro">Otro</option>
+    </select><br>
+    <input type="text" id="direccion" placeholder="Dirección" required><br>
+    <input type="text" id="comuna" placeholder="Comuna" required><br>
+    <input type="text" id="telefono" placeholder="Teléfono"><br>
+    <input type="email" id="correo" placeholder="Correo"><br>
+    <input type="text" id="numeroDocumento" placeholder="Número de Documento" required>
+    <select id="tipoDocumento" required>
+        <option value="">Seleccione tipo documento</option>
+        <option value="DNI">DNI</option>
+        <option value="Pasaporte">Pasaporte</option>
+        <option value="Otro">Otro</option>
+    </select>
+</form>
+
+<script>
+    document.getElementById("formBeneficiario").addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        const data = {
+            rut: document.getElementById("rut").value,
+            nombre: document.getElementById("nombre").value,
+            apellido: document.getElementById("apellido").value,
+            fechaNacimiento: document.getElementById("fechaNacimiento").value,
+            sexo: document.getElementById("sexo").value,
+            direccion: document.getElementById("direccion").value,
+            comuna: document.getElementById("comuna").value,
+            telefono: document.getElementById("telefono").value,
+            correo: document.getElementById("correo").value,
+            numeroDocumento: document.getElementById("numeroDocumento").value,
+            tipoDocumento: document.getElementById("tipoDocumento").value
+        };
+
+        const response = await fetch("/api/beneficiarios", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            alert("Beneficiario registrado exitosamente");
+            document.getElementById("formBeneficiario").reset();
+        } else {
+            alert("Error al registrar beneficiario");
+        }
+    });
+</script>
+</body>
+</html>

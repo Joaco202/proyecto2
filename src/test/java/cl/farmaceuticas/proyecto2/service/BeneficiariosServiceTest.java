@@ -1,4 +1,5 @@
 package cl.farmaceuticas.proyecto2.service;
+
 import cl.farmaceuticas.proyecto2.model.Beneficiarios;
 import cl.farmaceuticas.proyecto2.repository.BeneficiariosRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -6,7 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.util.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -31,11 +34,11 @@ class BeneficiariosServiceTest {
     }
 
     @Test
-    void testFindAll() {
-        List<Beneficiarios> lista = Arrays.asList(beneficiarioEjemplo);
+    void testGetAll() {
+        List<Beneficiarios> lista = Collections.singletonList(beneficiarioEjemplo);
         when(beneficiariosRepository.findAll()).thenReturn(lista);
 
-        List<Beneficiarios> resultado = beneficiariosService.findAll();
+        List<Beneficiarios> resultado = beneficiariosService.getAll();
 
         assertNotNull(resultado);
         assertEquals(1, resultado.size());
@@ -43,10 +46,10 @@ class BeneficiariosServiceTest {
     }
 
     @Test
-    void testFindById() {
-        when(beneficiariosRepository.findById(12345678L)).thenReturn(Optional.of(beneficiarioEjemplo));
+    void testGetByRut() {
+        when(beneficiariosRepository.findById("20.022.929-0")).thenReturn(Optional.of(beneficiarioEjemplo));
 
-        Optional<Beneficiarios> resultado = beneficiariosService.findById(12345678);
+        Optional<Beneficiarios> resultado = beneficiariosService.getByRut("20.022.929-0");
 
         assertTrue(resultado.isPresent());
         assertEquals("Chillán", resultado.get().getComuna());
@@ -64,25 +67,28 @@ class BeneficiariosServiceTest {
 
     @Test
     void testUpdate() {
-        when(beneficiariosRepository.findById(12345678L)).thenReturn(Optional.of(beneficiarioEjemplo));
-        when(beneficiariosRepository.save(any(Beneficiarios.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(beneficiariosRepository.findById("20.022.929-0")).thenReturn(Optional.of(beneficiarioEjemplo));
+        when(beneficiariosRepository.save(any(Beneficiarios.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         Beneficiarios nuevosDatos = new Beneficiarios();
         nuevosDatos.setComuna("San Carlos");
         nuevosDatos.setDireccion("Nueva Direccion");
         nuevosDatos.setTelefono("987654321");
 
-        Optional<Beneficiarios> actualizado = beneficiariosService.update(12345678, nuevosDatos);
+        Optional<Beneficiarios> actualizado = beneficiariosService.update("20.022.929-0", nuevosDatos);
 
         assertTrue(actualizado.isPresent());
         assertEquals("San Carlos", actualizado.get().getComuna());
         assertEquals("Nueva Direccion", actualizado.get().getDireccion());
+        assertEquals("987654321", actualizado.get().getTelefono());
     }
 
     @Test
     void testDelete() {
-        doNothing().when(beneficiariosRepository).deleteById(12345678L);
-        beneficiariosService.delete(12345678);
-        verify(beneficiariosRepository, times(1)).deleteById(12345678L);
+        doNothing().when(beneficiariosRepository).deleteById("20.022.929-0");
+
+        beneficiariosService.delete("20.022.929-0");
+
+        verify(beneficiariosRepository, times(1)).deleteById("20.022.929-0");
     }
 }

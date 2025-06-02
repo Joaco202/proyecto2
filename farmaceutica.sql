@@ -95,8 +95,7 @@ CREATE TABLE elementos_lista_precios (
   COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE beneficiarios (
-                               id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                               rut VARCHAR(20) NOT NULL UNIQUE,
+                               rut INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                                tipo_documento VARCHAR(10),
                                numero_documento VARCHAR(50) NOT NULL UNIQUE,
                                nombre VARCHAR(50) NOT NULL,
@@ -117,7 +116,7 @@ CREATE TABLE historial_pacientes (
                                      datos_historial TEXT,
                                      fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                      beneficiario_id INT UNSIGNED NOT NULL,
-                                     FOREIGN KEY (beneficiario_id) REFERENCES beneficiarios(id) ON DELETE CASCADE
+                                     FOREIGN KEY (beneficiario_id) REFERENCES beneficiarios(rut) ON DELETE CASCADE
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_general_ci;
@@ -130,7 +129,7 @@ CREATE TABLE facturas (
                           estado VARCHAR(20) NOT NULL DEFAULT 'emitida',
                           fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                           beneficiario_id INT UNSIGNED NOT NULL,
-                          FOREIGN KEY (beneficiario_id) REFERENCES beneficiarios(id) ON DELETE RESTRICT
+                          FOREIGN KEY (beneficiario_id) REFERENCES beneficiarios(rut) ON DELETE RESTRICT
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_general_ci;
@@ -278,7 +277,7 @@ CREATE TABLE dispersiones (
                               estado VARCHAR(20) NOT NULL DEFAULT 'pendiente',
                               beneficiario_id INT UNSIGNED NOT NULL,
                               usuario_id      INT UNSIGNED NULL,
-                              FOREIGN KEY (beneficiario_id) REFERENCES beneficiarios(id) ON DELETE RESTRICT,
+                              FOREIGN KEY (beneficiario_id) REFERENCES beneficiarios(rut) ON DELETE RESTRICT,
                               FOREIGN KEY (usuario_id)      REFERENCES usuarios(id)      ON DELETE SET NULL
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
@@ -292,7 +291,7 @@ CREATE TABLE dispensaciones (
                                 producto_id     INT UNSIGNED NOT NULL,
                                 lote_id         INT UNSIGNED NULL,
                                 usuario_id      INT UNSIGNED NULL,
-                                FOREIGN KEY (beneficiario_id) REFERENCES beneficiarios(id) ON DELETE RESTRICT,
+                                FOREIGN KEY (beneficiario_id) REFERENCES beneficiarios(rut) ON DELETE RESTRICT,
                                 FOREIGN KEY (producto_id)      REFERENCES productos(id)      ON DELETE RESTRICT,
                                 FOREIGN KEY (lote_id)          REFERENCES lotes_producto(id)   ON DELETE SET NULL,
                                 FOREIGN KEY (usuario_id)       REFERENCES usuarios(id)        ON DELETE SET NULL
