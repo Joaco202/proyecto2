@@ -11,7 +11,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/farmaceutica
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/farmaceutica
       SPRING_DATASOURCE_USERNAME: usuario
       SPRING_DATASOURCE_PASSWORD: usuariopwd
 
