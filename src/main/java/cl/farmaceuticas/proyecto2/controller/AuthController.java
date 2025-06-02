@@ -18,7 +18,7 @@ public class AuthController {
     public ResponseEntity<?> register(@RequestBody Map<String, String> body) {
         var resultado = authService.registrar(
                 body.get("usuario"),
-                body.get("clave"),
+                body.get("claveHash"),
                 body.get("nombre"),
                 body.get("apellido"),
                 body.get("correo"),
