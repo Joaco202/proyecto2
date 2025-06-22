@@ -12,8 +12,7 @@ RUN chmod +x mvnw \
 
 # 3) Copiamos el resto del código y generamos el jar
 COPY src/ src/
-RUN ./mvnw package -DskipTests
-
+RUN ./mvnw clean verify
 
 # ─── ETAPA 2: RUNTIME ────────────────────────────────────────────
 FROM maven:3.9.4-eclipse-temurin-21
