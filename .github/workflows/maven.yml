@@ -9,7 +9,7 @@ on:
 
 env:
   # eliminar creo --> IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/proyecto2-app
-  IMAGE_NAME: gcr.io/deep-theorem-461601-j3/mi-aplicacion
+  IMAGE_NAME: gcr.io/devopsfarmacia/mi-aplicacion:latest
 
 jobs:
   build-and-push:
@@ -87,7 +87,7 @@ jobs:
           git clone https://x-access-token:${{ secrets.CD_REPO_TOKEN }}@github.com/Joaco202/Proyecto2-CI.git cd-repo
           cd cd-repo
 
-          sed -i "s|image: gcr.io/deep-theorem-461601-j3/mi-aplicacion:.*|image: gcr.io/deep-theorem-461601-j3/mi-aplicacion:$TAG|g" apps/mi-aplicacion/deployment.yaml
+          sed -i "s|image: gcr.io/devopsfarmacia/mi-aplicacion:latest|image: gcr.io/devopsfarmacia/mi-aplicacion:$TAG|g" apps/mi-aplicacion/deployment.yaml
 
           git add apps/mi-aplicacion/deployment.yaml
           git commit -m "Actualiza tag de imagen a $TAG desde CI"
