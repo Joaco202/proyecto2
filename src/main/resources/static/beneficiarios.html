@@ -9,12 +9,7 @@
 </head>
 
 <body class="css-body">
-    <div id="menu-container mt-4"></div>
-    <script>
-        fetch('menu.html')
-            .then(res => res.text())
-            .then(html => document.getElementById('menu-container').innerHTML = html);
-    </script>
+    <div id="menu-container"></div>
     <div class="css-container">
         <h2 class="css-title2">Gestión de Beneficiarios</h2>
         <div id="mensaje" class="alert css-alert" style="display:none;"></div>
@@ -201,6 +196,14 @@
 
         cargarBeneficiarios();
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("menu.html")
+                .then(res => res.text())
+                .then(html => document.getElementById("menu-container").innerHTML = html);
+        });
+    </script>
+
 </body>
 
 </html>
