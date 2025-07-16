@@ -16,24 +16,39 @@
         });
     </script>
     <div class="css-container">
-        <h2 class="css-title2">Gestión de Ventas</h2>
+        <h2 class="css-title2">Crear Nueva Venta</h2>
         <div id="mensaje" class="alert css-alert" style="display:none;"></div>
         <form id="formVenta" class="mb-4">
-            <div class="row">
+            <div class="row align-items-end">
                 <div class="col">
-                    <input type="text" id="facturaId" class="form-control" placeholder="ID Factura" required>
+                    <label for="producto" class="form-label">Producto</label>
+                    <select id="producto" class="form-select" required>
+                        <option value="">Seleccione producto</option>
+                    </select>
                 </div>
                 <div class="col">
-                    <input type="datetime-local" id="fechaVenta" class="form-control" placeholder="Fecha Venta" required>
+                    <label for="cantidad" class="form-label">Cantidad</label>
+                    <input type="number" id="cantidad" class="form-control" min="1" placeholder="Cantidad" required>
                 </div>
                 <div class="col">
-                    <input type="text" id="usuarioId" class="form-control" placeholder="ID Usuario" required>
+                    <label for="descuento" class="form-label">Descuento (%)</label>
+                    <select id="descuento" class="form-select">
+                        <option value="0">Sin descuento</option>
+                        <option value="5">5%</option>
+                        <option value="10">10%</option>
+                        <option value="15">15%</option>
+                        <option value="20">20%</option>
+                        <option value="25">25%</option>
+                        <option value="30">30%</option>
+                    </select>
                 </div>
                 <div class="col">
-                    <input type="number" id="montoTotal" class="form-control" placeholder="Monto Total" required>
+                    <label for="montoTotal" class="form-label">Monto Total</label>
+                    <input type="number" id="montoTotal" class="form-control" placeholder="Monto Total" readonly>
                 </div>
             </div>
             <button type="submit" class="btn btn-primary css-btn mt-3">Registrar Venta</button>
+            <a href="listaventas.html" class="btn btn-secondary css-btn mt-3 ms-2">Lista Ventas</a>
         </form>
 
         <h3 class="css-title2">Lista de Ventas</h3>
@@ -41,12 +56,41 @@
     </div>
 
     <script>
+        let productos = [];
+        let usuarioId = null; // Debes obtener el usuario autenticado desde el backend/session
+        let facturaId = null; // Debes obtener el id de la factura generada automáticamente
+
+        async function cargarProductos() {
+            const res = await fetch("/api/productos");
+            productos = await res.json();
+            const select = document.getElementById("producto");
+            select.innerHTML = '<option value="">Seleccione producto</option>';
+            productos.forEach(p => {
+                select.innerHTML += `<option value="${p.id}" data-precio="${p.precio || 0}">${p.nombre}</option>`;
+            });
+        }
+
+        function calcularMontoTotal() {
+            const productoId = document.getElementById("producto").value;
+            const cantidad = parseFloat(document.getElementById("cantidad").value) || 0;
+            const descuento = parseFloat(document.getElementById("descuento").value) || 0;
+            const producto = productos.find(p => p.id == productoId);
+            const precioUnitario = producto ? (producto.precio || 0) : 0;
+            let total = cantidad * precioUnitario;
+            total = total - (total * descuento / 100);
+            document.getElementById("montoTotal").value = total.toFixed(2);
+        }
+
+        document.getElementById("producto").addEventListener("change", calcularMontoTotal);
+        document.getElementById("cantidad").addEventListener("input", calcularMontoTotal);
+        document.getElementById("descuento").addEventListener("change", calcularMontoTotal);
+
         async function cargarVentas() {
             const res = await fetch("/api/ventas");
             const ventas = await res.json();
             let html = `<table class="table table-striped"><thead>
                 <tr>
-                    <th>ID</th><th>ID Factura</th><th>Fecha Venta</th><th>ID Usuario</th><th>Monto Total</th><th>Acciones</th>
+                    <th>ID</th><th>ID Factura</th><th>Fecha Venta</th><th>ID Usuario</th><th>Producto</th><th>Cantidad</th><th>Descuento</th><th>Monto Total</th><th>Acciones</th>
                 </tr></thead><tbody>`;
             for (const v of ventas) {
                 html += `<tr>
@@ -54,6 +98,9 @@
                     <td>${v.factura ? v.factura.id : ''}</td>
                     <td>${v.fechaVenta || ''}</td>
                     <td>${v.usuario ? v.usuario.id : ''}</td>
+                    <td>${v.producto ? v.producto.nombre : ''}</td>
+                    <td>${v.cantidad || ''}</td>
+                    <td>${v.descuento || '0'}%</td>
                     <td>${v.montoTotal || ''}</td>
                     <td>
                         <button class="btn btn-danger btn-sm" onclick="eliminarVenta('${v.id}')">Eliminar</button>
@@ -66,12 +113,28 @@
 
         document.getElementById("formVenta").addEventListener("submit", async function(e) {
             e.preventDefault();
+            // Simulación de usuario y factura automáticos
+            usuarioId = 1; // Debes obtener el usuario real del backend/session
+            facturaId = null; // El backend debe generar la factura y devolver el id
+
+            const productoId = document.getElementById("producto").value;
+            const cantidad = document.getElementById("cantidad").value;
+            const descuento = document.getElementById("descuento").value;
+            const montoTotal = document.getElementById("montoTotal").value;
+
+            if (!productoId || !cantidad) {
+                mostrarMensaje("Selecciona producto y cantidad", "red");
+                return;
+            }
+
             const data = {
-                factura: { id: document.getElementById("facturaId").value },
-                fechaVenta: document.getElementById("fechaVenta").value,
-                usuario: { id: document.getElementById("usuarioId").value },
-                montoTotal: document.getElementById("montoTotal").value
+                producto: { id: productoId },
+                cantidad: cantidad,
+                descuento: descuento,
+                montoTotal: montoTotal
+                // usuario y factura se asignan automáticamente en el backend
             };
+
             const res = await fetch("/api/ventas", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -80,6 +143,7 @@
             if (res.ok) {
                 mostrarMensaje("Venta registrada exitosamente", "green");
                 this.reset();
+                document.getElementById("montoTotal").value = "";
                 cargarVentas();
             } else {
                 mostrarMensaje("Error al registrar venta", "red");
@@ -104,6 +168,7 @@
             el.style.color = color || "black";
         }
 
+        cargarProductos();
         cargarVentas();
     </script>
 </body>
