@@ -86,7 +86,7 @@
         document.getElementById("cantidad").addEventListener("input", calcularMontoTotal);
         document.getElementById("descuento").addEventListener("change", calcularMontoTotal);
 
-        /*async function cargarVentas() {
+        async function cargarVentas() {
             const res = await fetch("/api/ventas");
             const ventas = await res.json();
             let html = `<table class="table table-striped"><thead>
@@ -110,7 +110,7 @@
             }
             html += "</tbody></table>";
             document.getElementById("tablaVentas").innerHTML = html;
-        }*/
+        }
 
         document.getElementById("formVenta").addEventListener("submit", async function(e) {
             e.preventDefault();
