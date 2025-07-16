@@ -43,7 +43,8 @@
                     </select>
                 </div>
                 <div class="col">
-                    <label for="montoTotal" class="form-label">Monto Total</label>
+                    <label for="montoTotal (hay q ver si el precio se le puede agregar al producto en si
+                    para q aparesca automáticamente)" class="form-label">Monto Total</label>
                     <input type="number" id="montoTotal" class="form-control" placeholder="Monto Total" readonly>
                 </div>
             </div>
@@ -51,8 +52,8 @@
             <a href="listaventas.html" class="btn btn-secondary css-btn mt-3 ms-2">Lista Ventas</a>
         </form>
 
-        <h3 class="css-title2">Lista de Ventas</h3>
-        <div id="tablaVentas"></div>
+        <!--<h3 class="css-title2">Lista de Ventas</h3>
+        <div id="tablaVentas"></div> -->
     </div>
 
     <script>
@@ -85,7 +86,7 @@
         document.getElementById("cantidad").addEventListener("input", calcularMontoTotal);
         document.getElementById("descuento").addEventListener("change", calcularMontoTotal);
 
-        async function cargarVentas() {
+        /*async function cargarVentas() {
             const res = await fetch("/api/ventas");
             const ventas = await res.json();
             let html = `<table class="table table-striped"><thead>
@@ -109,7 +110,7 @@
             }
             html += "</tbody></table>";
             document.getElementById("tablaVentas").innerHTML = html;
-        }
+        }*/
 
         document.getElementById("formVenta").addEventListener("submit", async function(e) {
             e.preventDefault();
