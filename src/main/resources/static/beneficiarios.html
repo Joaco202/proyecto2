@@ -2,93 +2,108 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Beneficiarios</title>
     <link rel="stylesheet" href="./style.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 
 <body class="css-body">
 <!-- Menú externo como navbar -->
 <div id="menu-container"></div>
 
-<div class="css-container mt-4">
-    <h2 class="css-title2">Gestión de Beneficiariosdakjdakl</h2>
-    <div id="mensaje" class="alert css-alert" style="display:none;"></div>
-    <form id="formBeneficiario" class="mb-4">
-        <div class="row">
-            <div class="col">
-                <input type="text" id="rut" class="form-control" placeholder="RUT" required>
-            </div>
-            <div class="col">
-                <input type="text" id="nombre" class="form-control" placeholder="Nombre" required>
-            </div>
-            <div class="col">
-                <input type="text" id="apellido" class="form-control" placeholder="Apellido" required>
-            </div>
-            <div class="col">
-                <input type="date" id="fechaNacimiento" class="form-control" placeholder="Fecha Nacimiento"
-                       required>
-            </div>
-            <div class="col">
-                <select id="sexo" class="form-select" required>
-                    <option value="">Sexo</option>
-                    <option value="Masculino">Masculino</option>
-                    <option value="Femenino">Femenino</option>
-                </select>
-            </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col">
-                <input type="text" id="direccion" class="form-control" placeholder="Dirección" required>
-            </div>
-            <div class="col">
-                <input type="text" id="comuna" class="form-control" placeholder="Comuna" required>
-            </div>
-            <div class="col">
-                <input type="text" id="telefono" class="form-control" placeholder="Teléfono">
-            </div>
-            <div class="col">
-                <input type="email" id="correo" class="form-control" placeholder="Correo">
-            </div>
-            <div class="col">
-                <input type="text" id="numeroDocumento" class="form-control" placeholder="N° Documento" required>
-            </div>
-            <div class="col">
-                <select id="tipoDocumento" class="form-select" required>
-                    <option value="">Tipo Documento</option>
-                    <option value="RUT">RUT</option>
-                    <option value="Pasaporte">Pasaporte</option>
-                    <option value="Otro">Otro</option>
-                </select>
-            </div>
-        </div>
-        <button type="submit" class="btn btn-primary css-btn mt-3">Registrar</button>
-    </form>
+<div class="container my-5">
+    <h2 class="css-title2 text-center mb-4">Gestión de Beneficiarios</h2>
 
-    <h3 class="css-title2">Lista de Beneficiarios</h3>
-    <div id="tablaBeneficiarios"></div>
+    <div class="d-flex flex-column flex-md-row gap-4 justify-content-center align-items-start">
 
-    <!-- Modal de historial -->
-    <div id="historialModal" class="modal fade" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Historial del Beneficiario</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <!-- Formulario a la izquierda -->
+        <div class="css-container w-100" style="max-width: 450px;">
+            <div id="mensaje" class="alert css-alert" style="display:none;"></div>
+
+            <form id="formBeneficiario" class="w-100">
+                <div class="row g-2 mb-2">
+                    <div class="col-6">
+                        <input type="text" id="rut" class="form-control" placeholder="RUT" required />
+                    </div>
+                    <div class="col-6">
+                        <input type="text" id="nombre" class="form-control" placeholder="Nombre" required />
+                    </div>
+                    <div class="col-6">
+                        <input type="text" id="apellido" class="form-control" placeholder="Apellido" required />
+                    </div>
+                    <div class="col-6">
+                        <input type="date" id="fechaNacimiento" class="form-control" placeholder="Fecha Nacimiento" required />
+                    </div>
+                    <div class="col-12">
+                        <select id="sexo" class="form-select" required>
+                            <option value="">Sexo</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="modal-body" id="historialContenido"></div>
+
+                <div class="row g-2 mb-2">
+                    <div class="col-6">
+                        <input type="text" id="direccion" class="form-control" placeholder="Dirección" required />
+                    </div>
+                    <div class="col-6">
+                        <input type="text" id="comuna" class="form-control" placeholder="Comuna" required />
+                    </div>
+                    <div class="col-6">
+                        <input type="text" id="telefono" class="form-control" placeholder="Teléfono" />
+                    </div>
+                    <div class="col-6">
+                        <input type="email" id="correo" class="form-control" placeholder="Correo" />
+                    </div>
+                    <div class="col-6">
+                        <input type="text" id="numeroDocumento" class="form-control" placeholder="N° Documento" required />
+                    </div>
+                    <div class="col-6">
+                        <select id="tipoDocumento" class="form-select" required>
+                            <option value="">Tipo Documento</option>
+                            <option value="RUT">RUT</option>
+                            <option value="Pasaporte">Pasaporte</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary css-btn mt-3 w-100">Registrar</button>
+            </form>
+        </div>
+
+        <!-- Listado a la derecha -->
+        <div class="css-container flex-grow-1">
+            <h4 class="mt-2">Lista de Beneficiarios</h4>
+            <div id="tablaBeneficiarios" class="table-responsive mt-3"></div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal de historial -->
+<div id="historialModal" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Historial del Beneficiario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
+            <div class="modal-body" id="historialContenido"></div>
         </div>
     </div>
 </div>
+
 <footer class="navbar navbar-expand-lg navbar-dark bg-primary mt-auto">
     <div class="container justify-content-center">
-            <span class="navbar-text text-white">
-                &copy; 2025 Farmacéutica - Todos los derechos reservados
-            </span>
+        <span class="navbar-text text-white">
+            &copy; 2025 Farmacéutica - Todos los derechos reservados
+        </span>
     </div>
 </footer>
+
 <script>
     async function cargarBeneficiarios() {
         const res = await fetch("/api/beneficiarios");
