@@ -9,14 +9,30 @@
 </head>
 <body class="css-body">
 
-<!-- Navbar externo cargado dinámicamente -->
-<div id="menu-container"></div>
+<!-- Navbar insertada directamente -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="inicio.html">Farmacéutica</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="inicio.html">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="beneficiarios.html">Beneficiarios</a></li>
+                <li class="nav-item"><a class="nav-link" href="regisbenefi.html">Registrar Beneficiario</a></li>
+                <li class="nav-item"><a class="nav-link" href="producto.html">Productos</a></li>
+                <li class="nav-item"><a class="nav-link" href="registro.html">Registro de Usuario</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
 <div class="css-container mt-4">
     <h2 class="css-title2">Formulario de Registro de Beneficiario</h2>
 
     <form id="formBeneficiario">
-        <!-- todos tus campos de formulario aquí (sin cambios) -->
         <div>
             <input type="text" id="rut" class="form-control" placeholder="RUT" required>
         </div>
@@ -110,13 +126,6 @@
             alert("Error al registrar beneficiario");
         }
     });
-
-    // Cargar navbar externo
-    fetch("menu.html")
-        .then(res => res.text())
-        .then(data => {
-            document.getElementById("menu-container").innerHTML = data;
-        });
 </script>
 </body>
 </html>
