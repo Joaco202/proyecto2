@@ -9,10 +9,14 @@
 </head>
 <body class="css-body">
 
-<div class="css-container">
+<!-- Navbar externo cargado dinámicamente -->
+<div id="menu-container"></div>
+
+<div class="css-container mt-4">
     <h2 class="css-title2">Formulario de Registro de Beneficiario</h2>
 
     <form id="formBeneficiario">
+        <!-- todos tus campos de formulario aquí (sin cambios) -->
         <div>
             <input type="text" id="rut" class="form-control" placeholder="RUT" required>
         </div>
@@ -106,6 +110,13 @@
             alert("Error al registrar beneficiario");
         }
     });
+
+    // Cargar navbar externo
+    fetch("menu.html")
+        .then(res => res.text())
+        .then(data => {
+            document.getElementById("menu-container").innerHTML = data;
+        });
 </script>
 </body>
 </html>
