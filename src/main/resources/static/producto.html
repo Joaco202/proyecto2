@@ -10,28 +10,27 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
             crossorigin="anonymous"></script>
-
 </head>
 
 <body class="css-body">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container justify-content-center">
+        <a class="navbar-brand mx-auto" href="#">Farmacéutica</a>
+    </div>
+</nav>
+
 <div class="container my-5">
     <div class="d-flex flex-column flex-md-row gap-4 justify-content-center align-items-start">
         <div class="css-container w-100" style="max-width: 400px;">
             <h2 class="css-title2 text-center">Nuevo Producto</h2>
 
             <form id="productoForm" class="w-100">
-                <div>
-                    <input type="text" class="form-control" id="codigo" placeholder="Código" required />
-                </div>
-                <div>
-                    <input type="text" class="form-control" id="nombre" placeholder="Nombre" required />
-                </div>
-                <div>
-                    <textarea class="form-control" id="descripcion" placeholder="Descripción"></textarea>
-                </div>
-                <div>
-                    <input type="text" class="form-control" id="unidad" placeholder="Unidad/es" />
-                </div>
+                <div><input type="text" class="form-control" id="codigo" placeholder="Código" required /></div>
+                <div><input type="text" class="form-control" id="nombre" placeholder="Nombre" required /></div>
+                <div><textarea class="form-control" id="descripcion" placeholder="Descripción"></textarea></div>
+                <div><input type="text" class="form-control" id="unidad" placeholder="Unidad/es" /></div>
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="activo" checked />
                     <label class="form-check-label" for="activo">Activo</label>
@@ -52,7 +51,6 @@
     </div>
 </div>
 
-
 <script>
     let editId = null;
 
@@ -70,26 +68,25 @@
                 return;
             }
 
-            let tabla = '<table><thead><tr><th>Código</th><th>Nombre</th><th>Descripción</th><th>Unidad</th><th>Activo</th><th>Acciones</th></tr></thead><tbody>';
+            let tabla = '<table class="table table-bordered"><thead><tr><th>Código</th><th>Nombre</th><th>Descripción</th><th>Unidad</th><th>Activo</th><th>Acciones</th></tr></thead><tbody>';
 
             productos.forEach(p => {
                 tabla += `<tr>
-                    <td>${p.codigo}</td>
-                    <td>${p.nombre}</td>
-                    <td>${p.descripcion || ''}</td>
-                    <td>${p.unidad || ''}</td>
-                    <td>${p.activo ? 'Sí' : 'No'}</td>
-                    <td>
-                        <button class="edit" data-id="${p.id}">Editar</button>
-                        <button class="delete" data-id="${p.id}">Eliminar</button>
-                    </td>
-                </tr>`;
+            <td>${p.codigo}</td>
+            <td>${p.nombre}</td>
+            <td>${p.descripcion || ''}</td>
+            <td>${p.unidad || ''}</td>
+            <td>${p.activo ? 'Sí' : 'No'}</td>
+            <td>
+              <button class="btn btn-sm btn-warning edit" data-id="${p.id}">Editar</button>
+              <button class="btn btn-sm btn-danger delete" data-id="${p.id}">Eliminar</button>
+            </td>
+          </tr>`;
             });
 
             tabla += '</tbody></table>';
             cont.innerHTML = tabla;
 
-            // Asignar eventos a botones
             document.querySelectorAll('button.edit').forEach(btn => btn.onclick = editarProducto);
             document.querySelectorAll('button.delete').forEach(btn => btn.onclick = eliminarProducto);
 
@@ -205,9 +202,9 @@
         }
     });
 
-    // Cargar productos al inicio
     cargarProductos();
 </script>
+
 </body>
 
 </html>
