@@ -20,9 +20,6 @@
         <div id="mensaje" class="alert css-alert" style="display:none;"></div>
         <form id="formVenta" class="mb-4">
             <div class="row align-items-end">
-                <!-- Producto y lote ocultos, solo selecciona producto para mostrar nombre y precio -->
-                <input type="hidden" id="producto_id" />
-                <input type="hidden" id="lote_id" />
                 <div class="col">
                     <label for="producto" class="form-label">Producto</label>
                     <select id="producto" class="form-select" required>
@@ -50,13 +47,15 @@
                     <input type="number" id="montoTotal" class="form-control" placeholder="Monto Total" readonly>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary css-btn mt-3">Registrar Venta</button>
+            <button type="submit" class="btn btn-primary css-btn mt-3">Agregar Producto a Venta</button>
             <a href="listaventas.html" class="btn btn-secondary css-btn mt-3 ms-2">Lista Ventas</a>
         </form>
+        <button type="button" class="btn btn-success css-btn mt-3" id="finalizarVentaBtn" style="display:none;">Finalizar Venta</button>
     </div>
 
     <script>
         let productos = [];
+        let ventaActualId = null;
 
         async function cargarProductos() {
             const res = await fetch("/api/productos");
@@ -79,11 +78,7 @@
             document.getElementById("montoTotal").value = total.toFixed(2);
         }
 
-        document.getElementById("producto").addEventListener("change", function() {
-            calcularMontoTotal();
-            // Set producto_id oculto
-            document.getElementById("producto_id").value = this.value;
-        });
+        document.getElementById("producto").addEventListener("change", calcularMontoTotal);
         document.getElementById("cantidad").addEventListener("input", calcularMontoTotal);
         document.getElementById("descuento").addEventListener("change", calcularMontoTotal);
 
@@ -94,20 +89,40 @@
             const descuento = document.getElementById("descuento").value;
             const producto = productos.find(p => p.id == productoId);
             const precio = producto ? producto.precio : 0;
-            // lote_id y producto_id ocultos, no modificables por el usuario
-            const loteId = document.getElementById("lote_id").value || null;
+            const montoTotal = document.getElementById("montoTotal").value;
 
             if (!productoId || !cantidad) {
                 mostrarMensaje("Selecciona producto y cantidad", "red");
                 return;
             }
 
+            // Paso 1: Crear la venta si no existe
+            if (!ventaActualId) {
+                // Ajusta usuario y factura según tu lógica de autenticación y facturación
+                const ventaRes = await fetch('/api/ventas', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        usuario: { id: 1 }, // <-- Ajusta esto según tu autenticación
+                        factura: { id: 1 }, // <-- Ajusta esto si tienes facturación
+                        montoTotal: montoTotal
+                    })
+                });
+                if (!ventaRes.ok) {
+                    mostrarMensaje("Error al crear la venta", "red");
+                    return;
+                }
+                const venta = await ventaRes.json();
+                ventaActualId = venta.id;
+            }
+
+            // Paso 2: Crear el elemento de venta asociado a la venta
             const data = {
+                venta: { id: ventaActualId },
                 producto: { id: productoId },
                 cantidad: cantidad,
                 precio: precio,
-                descuento: descuento,
-                lote: loteId ? { id: loteId } : undefined // solo si tu modelo lo requiere
+                descuento: descuento
             };
 
             const res = await fetch("/api/elementos-venta", {
@@ -116,12 +131,21 @@
                 body: JSON.stringify(data)
             });
             if (res.ok) {
-                mostrarMensaje("Elemento de venta registrado exitosamente", "green");
+                mostrarMensaje("Producto agregado a la venta", "green");
                 this.reset();
                 document.getElementById("montoTotal").value = "";
+                document.getElementById("finalizarVentaBtn").style.display = "block";
             } else {
                 mostrarMensaje("Error al registrar elemento de venta", "red");
             }
+        });
+
+        document.getElementById("finalizarVentaBtn").addEventListener("click", function() {
+            ventaActualId = null;
+            document.getElementById("formVenta").reset();
+            document.getElementById("montoTotal").value = "";
+            this.style.display = "none";
+            mostrarMensaje("Venta finalizada. Puedes crear una nueva.", "green");
         });
 
         function mostrarMensaje(msg, color) {
@@ -134,3 +158,4 @@
         cargarProductos();
     </script>
 </body>
+</html>
