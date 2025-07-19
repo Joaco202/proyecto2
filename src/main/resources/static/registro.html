@@ -10,7 +10,7 @@
 </head>
 <body class="css-body">
 
-<!-- Menú externo como navbar -->
+<!-- Menú externo -->
 <div id="menu-container"></div>
 
 <!-- CONTENIDO -->
@@ -24,11 +24,19 @@
     <input class="form-control mb-2" type="text" id="nombre" placeholder="Nombre" />
     <input class="form-control mb-2" type="text" id="apellido" placeholder="Apellido" />
     <input class="form-control mb-2" type="email" id="correo" placeholder="Correo electrónico" />
-    <input class="form-control mb-3" type="text" id="rol" placeholder="Rol (ej: Administrador)" />
+
+    <!-- Nuevo select de roles -->
+    <div class="mb-3">
+        <label for="rol" class="form-label">Rol</label>
+        <select class="form-select" id="rol" required>
+            <option value="">Seleccione un rol</option>
+        </select>
+    </div>
 
     <button class="btn btn-primary css-btn mb-2" id="btnRegistrar">Registrar</button>
     <p class="alert alert-danger css-alert" id="mensaje" style="color:red;"></p>
 </div>
+
 <footer class="navbar navbar-expand-lg navbar-dark bg-primary mt-auto">
     <div class="container justify-content-center">
             <span class="navbar-text text-white">
@@ -36,8 +44,8 @@
             </span>
     </div>
 </footer>
+
 <script>
-    // Función para cargar el menú desde menu.html
     async function cargarMenu() {
         const menuContainer = document.getElementById('menu-container');
         try {
@@ -50,12 +58,31 @@
         }
     }
 
+    async function cargarRoles() {
+        try {
+            const res = await fetch("http://localhost:8080/api/roles");
+            const roles = await res.json();
+
+            const select = document.getElementById("rol");
+            select.innerHTML = `<option value="">Seleccione un rol</option>`;
+            roles.forEach(rol => {
+                const option = document.createElement("option");
+                option.value = rol.id;
+                option.textContent = rol.nombre;
+                select.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Error al cargar roles:", error);
+        }
+    }
+
     async function registrar() {
         const usuario = document.getElementById("usuario").value.trim();
         const clave = document.getElementById("clave").value.trim();
+        const rolId = document.getElementById("rol").value;
 
-        if (!usuario || !clave) {
-            document.getElementById("mensaje").textContent = "Usuario y contraseña son obligatorios.";
+        if (!usuario || !clave || !rolId) {
+            document.getElementById("mensaje").textContent = "Usuario, contraseña y rol son obligatorios.";
             return;
         }
 
@@ -65,7 +92,9 @@
             nombre: document.getElementById("nombre").value.trim(),
             apellido: document.getElementById("apellido").value.trim(),
             correo: document.getElementById("correo").value.trim(),
-            rol: document.getElementById("rol").value.trim()
+            rol: {
+                id: parseInt(rolId)
+            }
         };
 
         try {
@@ -77,14 +106,17 @@
 
             const result = await res.json();
 
+            const mensajeEl = document.getElementById("mensaje");
+
             if (!res.ok) {
-                throw new Error(result.error || "Error desconocido");
+                mensajeEl.style.color = "red";
+                mensajeEl.textContent = result.error || "Error al registrar.";
+                return;
             }
 
-            const mensajeEl = document.getElementById("mensaje");
             mensajeEl.style.color = "green";
             mensajeEl.textContent = result.mensaje || "Registro exitoso.";
-            document.querySelectorAll("input").forEach(input => input.value = "");
+            document.querySelectorAll("input, select").forEach(input => input.value = "");
 
         } catch (error) {
             const mensajeEl = document.getElementById("mensaje");
@@ -94,9 +126,8 @@
         }
     }
 
-    // Carga el menú al inicio
     cargarMenu();
-
+    cargarRoles();
     document.getElementById("btnRegistrar").addEventListener("click", registrar);
 </script>
 
