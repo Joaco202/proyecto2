@@ -55,11 +55,10 @@
                         <option value="">Seleccione producto</option>
                     </select>
                 </div>
+                <!-- MODIFICADO: Lote ahora es input de texto -->
                 <div class="col">
                     <label for="lote" class="form-label">Lote</label>
-                    <select id="lote" class="form-select">
-                        <option value="">Seleccione lote</option>
-                    </select>
+                    <input type="text" id="lote" class="form-control" placeholder="Lote" required>
                 </div>
                 <div class="col">
                     <label for="cantidad" class="form-label">Cantidad</label>
@@ -79,7 +78,6 @@
 
     <script>
         let productos = [];
-        let lotes = [];
         let compraActualId = null;
 
         async function cargarProductos() {
@@ -91,24 +89,6 @@
                 select.innerHTML += `<option value="${p.id}">${p.nombre}</option>`;
             });
         }
-
-        async function cargarLotes() {
-            const res = await fetch("/api/lotes-producto");
-            lotes = await res.json();
-        }
-
-        function actualizarLotesParaProducto(productoId) {
-            const select = document.getElementById("lote");
-            select.innerHTML = '<option value="">Seleccione lote</option>';
-            lotes.filter(l => l.producto && l.producto.id == productoId)
-                .forEach(l => {
-                    select.innerHTML += `<option value="${l.id}">${l.numeroLote} (Vence: ${l.fechaVencimiento || ''})</option>`;
-                });
-        }
-
-        document.getElementById("producto").addEventListener("change", function() {
-            actualizarLotesParaProducto(this.value);
-        });
 
         document.getElementById("formCompra").addEventListener("submit", async function(e) {
             e.preventDefault();
@@ -143,7 +123,7 @@
             const data = {
                 compra: { id: compraActualId },
                 producto: { id: document.getElementById("producto").value },
-                lote: document.getElementById("lote").value ? { id: document.getElementById("lote").value } : null,
+                lote: document.getElementById("lote").value, // Ahora es texto
                 cantidad: document.getElementById("cantidad").value,
                 precio: document.getElementById("precio").value
             };
@@ -181,7 +161,7 @@
             for (const el of elementosDeCompra) {
                 html += `<tr>
                     <td>${el.producto ? el.producto.nombre : ''}</td>
-                    <td>${el.lote ? el.lote.numeroLote : ''}</td>
+                    <td>${el.lote || ''}</td>
                     <td>${el.cantidad || ''}</td>
                     <td>${el.precio || ''}</td>
                     <td>${el.cantidad && el.precio ? (el.cantidad * el.precio).toFixed(2) : ''}</td>
@@ -213,8 +193,7 @@
         }
 
         // Inicialización
-        cargarProductos();
-        cargarLotes();
+                cargarProductos();
     </script>
 </body>
 </html>
