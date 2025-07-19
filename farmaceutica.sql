@@ -38,6 +38,7 @@ CREATE TABLE productos (
                            codigo VARCHAR(50) NOT NULL UNIQUE,
                            nombre VARCHAR(100) NOT NULL,
                            descripcion TEXT,
+                           precio INTEGER UNSIGNED NOT NULL,
                            unidad VARCHAR(20),
                            activo TINYINT(1) NOT NULL DEFAULT 1,
                            fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP

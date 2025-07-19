@@ -25,6 +25,9 @@ public class Producto {
     @Column(name = "descripcion")
     private String descripcion;
 
+    @Column(name = "precio")
+    private Integer precio;
+
     @Column(name = "unidad")
     private String unidad;
 
@@ -38,12 +41,13 @@ public class Producto {
 
     public Producto() {}
 
-    public Producto(String codigo, String nombre, String descripcion, String unidad, Boolean activo) {
+    public Producto(String codigo, String nombre, String descripcion, String unidad, Boolean activo, Integer precio) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.unidad = unidad;
         this.activo = activo;
+        this.precio=precio;
     }
 
     public Integer getId() { return id; }
@@ -58,10 +62,9 @@ public class Producto {
     public Boolean getActivo() { return activo; }
     public void setActivo(Boolean activo) { this.activo = activo; }
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
-
-    @Override
-    public String toString() {
-        return String.format("Producto[id=%d, codigo='%s', nombre='%s']", id, codigo, nombre);
+    public Integer getPrecio() { return precio; }
+    public void setPrecio(Integer precio) {this.precio = precio;}
     }
-}
+
+
 

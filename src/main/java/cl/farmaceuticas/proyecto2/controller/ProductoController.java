@@ -31,8 +31,8 @@ public class ProductoController {
 
     @PostMapping
     public ResponseEntity<Producto> create(@RequestBody Producto producto) {
-        // Verifica que no venga nulo algún campo obligatorio
-        if (producto.getCodigo() == null || producto.getNombre() == null) {
+        // Validaciones básicas
+        if (producto.getCodigo() == null || producto.getNombre() == null || producto.getPrecio() == null || producto.getPrecio() < 0) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -40,7 +40,6 @@ public class ProductoController {
         if (producto.getActivo() == null) {
             producto.setActivo(true); // o false según tu lógica
         }
-
 
         try {
             Producto created = productoService.save(producto);
