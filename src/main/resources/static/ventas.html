@@ -19,20 +19,116 @@
         <h2 class="css-title2">Crear Nueva Venta</h2>
         <div id="mensaje" class="alert css-alert" style="display:none;"></div>
         <form id="formVenta" class="mb-4">
-            <div class="row align-items-end">
+            <div id="productosContainer">
+                <!-- Aquí se agregan los sets de productos -->
+                <div class="row align-items-end producto-row mb-2">
+                    <div class="col">
+                        <label class="form-label">Producto</label>
+                        <select class="form-select producto" required>
+                            <option value="">Seleccione producto</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Cantidad</label>
+                        <input type="number" class="form-control cantidad" min="1" placeholder="Cantidad" required>
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Descuento (%)</label>
+                        <select class="form-select descuento">
+                            <option value="0">Sin descuento</option>
+                            <option value="5">5%</option>
+                            <option value="10">10%</option>
+                            <option value="15">15%</option>
+                            <option value="20">20%</option>
+                            <option value="25">25%</option>
+                            <option value="30">30%</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Monto Total</label>
+                        <input type="number" class="form-control montoTotal" placeholder="Monto Total" readonly>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-danger btn-sm remove-producto" style="margin-top:32px;display:none;">X</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-end mb-2">
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
                 <div class="col">
-                    <label for="producto" class="form-label">Producto</label>
-                    <select id="producto" class="form-select" required>
+                    <label class="form-label">RUT Beneficiario (opcional)</label>
+                    <input type="text" id="rutBeneficiario" class="form-control" placeholder="RUT (opcional)" list="rutList">
+                    <datalist id="rutList"></datalist>
+                </div>
+            </div>
+            <button type="button" class="btn btn-secondary mb-2" id="addProductoBtn">Añadir otro Producto</button>
+            <button type="submit" class="btn btn-primary css-btn mt-3 w-100">Agregar Producto a Venta</button>
+            <a href="listaventas.html" class="btn btn-secondary css-btn mt-3 w-100">Lista Ventas</a>
+        </form>
+        <button type="button" class="btn btn-success css-btn mt-3" id="finalizarVentaBtn" style="display:none;">Finalizar Venta</button>
+        <button type="button" class="btn btn-warning css-btn mt-3" id="emitirFacturaBtn" style="display:none;">Emitir Factura</button>
+    </div>
+
+    <script>
+        let productos = [];
+        let beneficiarios = [];
+        let ventaActualId = null;
+
+        async function cargarProductos() {
+            const res = await fetch("/api/productos");
+            productos = await res.json();
+            actualizarSelectsProducto();
+        }
+
+        function actualizarSelectsProducto() {
+            document.querySelectorAll('.producto').forEach(select => {
+                const current = select.value;
+                select.innerHTML = '<option value="">Seleccione producto</option>';
+                productos.forEach(p => {
+                    select.innerHTML += `<option value="${p.id}" data-precio="${p.precio || 0}">${p.nombre}</option>`;
+                });
+                select.value = current;
+            });
+        }
+
+        async function cargarBeneficiarios() {
+            const res = await fetch("/api/beneficiarios");
+            beneficiarios = await res.json();
+            const datalist = document.getElementById("rutList");
+            datalist.innerHTML = "";
+            beneficiarios.forEach(b => {
+                datalist.innerHTML += `<option value="${b.rut}">${b.nombre} ${b.apellido}</option>`;
+            });
+        }
+
+        function calcularMontoTotalRow(row) {
+            const productoId = row.querySelector('.producto').value;
+            const cantidad = parseFloat(row.querySelector('.cantidad').value) || 0;
+            const descuento = parseFloat(row.querySelector('.descuento').value) || 0;
+            const producto = productos.find(p => p.id == productoId);
+            const precioUnitario = producto ? (producto.precio || 0) : 0;
+            let total = cantidad * precioUnitario;
+            total = total - (total * descuento / 100);
+            row.querySelector('.montoTotal').value = total.toFixed(2);
+        }
+
+        function addProductoRow() {
+            const container = document.getElementById("productosContainer");
+            const row = document.createElement("div");
+            row.className = "row align-items-end producto-row mb-2";
+            row.innerHTML = `
+                <div class="col">
+                    <select class="form-select producto" required>
                         <option value="">Seleccione producto</option>
                     </select>
                 </div>
                 <div class="col">
-                    <label for="cantidad" class="form-label">Cantidad</label>
-                    <input type="number" id="cantidad" class="form-control" min="1" placeholder="Cantidad" required>
+                    <input type="number" class="form-control cantidad" min="1" placeholder="Cantidad" required>
                 </div>
                 <div class="col">
-                    <label for="descuento" class="form-label">Descuento (%)</label>
-                    <select id="descuento" class="form-select">
+                    <select class="form-select descuento">
                         <option value="0">Sin descuento</option>
                         <option value="5">5%</option>
                         <option value="10">10%</option>
@@ -43,69 +139,64 @@
                     </select>
                 </div>
                 <div class="col">
-                    <label for="montoTotal" class="form-label">Monto Total</label>
-                    <input type="number" id="montoTotal" class="form-control" placeholder="Monto Total" readonly>
+                    <input type="number" class="form-control montoTotal" placeholder="Monto Total" readonly>
                 </div>
-            </div>
-            <button type="submit" class="btn btn-primary css-btn mt-3">Agregar Producto a Venta</button>
-            <a href="listaventas.html" class="btn btn-secondary css-btn mt-3 ms-2">Lista Ventas</a>
-        </form>
-        <button type="button" class="btn btn-success css-btn mt-3" id="finalizarVentaBtn" style="display:none;">Finalizar Venta</button>
-    </div>
-
-    <script>
-        let productos = [];
-        let ventaActualId = null;
-
-        async function cargarProductos() {
-            const res = await fetch("/api/productos");
-            productos = await res.json();
-            const select = document.getElementById("producto");
-            select.innerHTML = '<option value="">Seleccione producto</option>';
-            productos.forEach(p => {
-                select.innerHTML += `<option value="${p.id}" data-precio="${p.precio || 0}">${p.nombre}</option>`;
+                <div class="col">
+                    <button type="button" class="btn btn-danger btn-sm remove-producto" style="margin-top:32px;">X</button>
+                </div>
+            `;
+            container.appendChild(row);
+            actualizarSelectsProducto();
+            row.querySelectorAll('.producto, .cantidad, .descuento').forEach(el => {
+                el.addEventListener('change', () => calcularMontoTotalRow(row));
+                el.addEventListener('input', () => calcularMontoTotalRow(row));
             });
+            row.querySelector('.remove-producto').addEventListener('click', () => row.remove());
         }
 
-        function calcularMontoTotal() {
-            const productoId = document.getElementById("producto").value;
-            const cantidad = parseFloat(document.getElementById("cantidad").value) || 0;
-            const descuento = parseFloat(document.getElementById("descuento").value) || 0;
-            const producto = productos.find(p => p.id == productoId);
-            const precioUnitario = producto ? (producto.precio || 0) : 0;
-            let total = cantidad * precioUnitario;
-            total = total - (total * descuento / 100);
-            document.getElementById("montoTotal").value = total.toFixed(2);
-        }
+        document.getElementById("addProductoBtn").addEventListener("click", addProductoRow);
 
-        document.getElementById("producto").addEventListener("change", calcularMontoTotal);
-        document.getElementById("cantidad").addEventListener("input", calcularMontoTotal);
-        document.getElementById("descuento").addEventListener("change", calcularMontoTotal);
+        // Inicializa eventos para la primera fila
+        document.querySelectorAll('.producto-row').forEach(row => {
+            row.querySelectorAll('.producto, .cantidad, .descuento').forEach(el => {
+                el.addEventListener('change', () => calcularMontoTotalRow(row));
+                el.addEventListener('input', () => calcularMontoTotalRow(row));
+            });
+        });
+
+        cargarProductos();
+        cargarBeneficiarios();
 
         document.getElementById("formVenta").addEventListener("submit", async function(e) {
             e.preventDefault();
-            const productoId = document.getElementById("producto").value;
-            const cantidad = document.getElementById("cantidad").value;
-            const descuento = document.getElementById("descuento").value;
-            const producto = productos.find(p => p.id == productoId);
-            const precio = producto ? producto.precio : 0;
-            const montoTotal = document.getElementById("montoTotal").value;
-
-            if (!productoId || !cantidad) {
-                mostrarMensaje("Selecciona producto y cantidad", "red");
-                return;
+            const filas = document.querySelectorAll('.producto-row');
+            let productosVenta = [];
+            let montoTotalVenta = 0;
+            for (const row of filas) {
+                const productoId = row.querySelector('.producto').value;
+                const cantidad = row.querySelector('.cantidad').value;
+                const descuento = row.querySelector('.descuento').value;
+                const producto = productos.find(p => p.id == productoId);
+                const precio = producto ? producto.precio : 0;
+                const montoTotal = row.querySelector('.montoTotal').value;
+                if (!productoId || !cantidad) {
+                    mostrarMensaje("Selecciona producto y cantidad en todas las filas", "red");
+                    return;
+                }
+                productosVenta.push({ productoId, cantidad, descuento, precio });
+                montoTotalVenta += parseFloat(montoTotal) || 0;
             }
 
             // Paso 1: Crear la venta si no existe
             if (!ventaActualId) {
-                // Ajusta usuario y factura según tu lógica de autenticación y facturación
+                // Ajusta usuario según autenticación real
                 const ventaRes = await fetch('/api/ventas', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         usuario: { id: 1 }, // <-- Ajusta esto según tu autenticación
-                        factura: { id: 1 }, // <-- Ajusta esto si tienes facturación
-                        montoTotal: montoTotal
+                        montoTotal: montoTotalVenta,
+                        fechaVenta: new Date().toISOString()
                     })
                 });
                 if (!ventaRes.ok) {
@@ -114,38 +205,74 @@
                 }
                 const venta = await ventaRes.json();
                 ventaActualId = venta.id;
-            }
-
-            // Paso 2: Crear el elemento de venta asociado a la venta
-            const data = {
-                venta: { id: ventaActualId },
-                producto: { id: productoId },
-                cantidad: cantidad,
-                precio: precio,
-                descuento: descuento
-            };
-
-            const res = await fetch("/api/elementos-venta", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            });
-            if (res.ok) {
-                mostrarMensaje("Producto agregado a la venta", "green");
-                this.reset();
-                document.getElementById("montoTotal").value = "";
                 document.getElementById("finalizarVentaBtn").style.display = "block";
-            } else {
-                mostrarMensaje("Error al registrar elemento de venta", "red");
+                document.getElementById("emitirFacturaBtn").style.display = "block";
             }
+
+            // Paso 2: Crear los elementos de venta asociados a la venta
+            for (const p of productosVenta) {
+                const data = {
+                    venta: { id: ventaActualId },
+                    producto: { id: p.productoId },
+                    cantidad: p.cantidad,
+                    precio: p.precio,
+                    descuento: p.descuento
+                };
+                const res = await fetch("/api/elementos-venta", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+                if (!res.ok) {
+                    mostrarMensaje("Error al registrar elemento de venta", "red");
+                    return;
+                }
+            }
+            mostrarMensaje("Productos agregados a la venta", "green");
+            this.reset();
+            document.getElementById("productosContainer").innerHTML = "";
+            addProductoRow();
         });
 
         document.getElementById("finalizarVentaBtn").addEventListener("click", function() {
             ventaActualId = null;
             document.getElementById("formVenta").reset();
-            document.getElementById("montoTotal").value = "";
+            document.getElementById("productosContainer").innerHTML = "";
+            addProductoRow();
             this.style.display = "none";
+            document.getElementById("emitirFacturaBtn").style.display = "none";
             mostrarMensaje("Venta finalizada. Puedes crear una nueva.", "green");
+        });
+
+        document.getElementById("emitirFacturaBtn").addEventListener("click", async function() {
+            const rut = document.getElementById("rutBeneficiario").value;
+            if (!rut) {
+                mostrarMensaje("Debes ingresar un RUT para emitir la factura", "red");
+                return;
+            }
+            const beneficiario = beneficiarios.find(b => b.rut === rut);
+            if (!beneficiario) {
+                mostrarMensaje("RUT no encontrado entre los beneficiarios", "red");
+                return;
+            }
+            // Crea la factura asociada a la venta
+            const facturaRes = await fetch('/api/facturas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    numeroFactura: "F-" + Date.now(),
+                    fecha: new Date().toISOString().slice(0,10),
+                    beneficiario: { rut: rut },
+                    montoTotal: 0, // Puedes calcular el monto total real si lo necesitas
+                    estado: "emitida"
+                })
+            });
+            if (!facturaRes.ok) {
+                mostrarMensaje("Error al emitir la factura", "red");
+                return;
+            }
+            mostrarMensaje("Factura emitida correctamente", "green");
+            this.style.display = "none";
         });
 
         function mostrarMensaje(msg, color) {
@@ -155,7 +282,8 @@
             el.style.color = color || "black";
         }
 
-        cargarProductos();
+        // Inicializa con una fila de producto
+        addProductoRow();
     </script>
 </body>
 </html>
