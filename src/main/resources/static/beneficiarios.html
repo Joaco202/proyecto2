@@ -22,23 +22,19 @@
         <div class="css-container w-100" style="max-width: 450px;">
             <div id="mensaje" class="alert css-alert" style="display:none;"></div>
 
-            <form id="formBeneficiario" class="w-100" novalidate>
+            <form id="formBeneficiario" class="w-100">
                 <div class="row g-2 mb-2">
                     <div class="col-6">
                         <input type="text" id="rut" class="form-control" placeholder="RUT" required />
-                        <div class="invalid-feedback">Ingrese un RUT válido (ej: 12345678-9).</div>
                     </div>
                     <div class="col-6">
                         <input type="text" id="nombre" class="form-control" placeholder="Nombre" required />
-                        <div class="invalid-feedback">Ingrese el nombre.</div>
                     </div>
                     <div class="col-6">
                         <input type="text" id="apellido" class="form-control" placeholder="Apellido" required />
-                        <div class="invalid-feedback">Ingrese el apellido.</div>
                     </div>
                     <div class="col-6">
                         <input type="date" id="fechaNacimiento" class="form-control" placeholder="Fecha Nacimiento" required />
-                        <div class="invalid-feedback">Ingrese una fecha válida y que no sea futura.</div>
                     </div>
                     <div class="col-12">
                         <select id="sexo" class="form-select" required>
@@ -46,30 +42,24 @@
                             <option value="Masculino">Masculino</option>
                             <option value="Femenino">Femenino</option>
                         </select>
-                        <div class="invalid-feedback">Seleccione un sexo.</div>
                     </div>
                 </div>
 
                 <div class="row g-2 mb-2">
                     <div class="col-6">
                         <input type="text" id="direccion" class="form-control" placeholder="Dirección" required />
-                        <div class="invalid-feedback">Ingrese la dirección.</div>
                     </div>
                     <div class="col-6">
                         <input type="text" id="comuna" class="form-control" placeholder="Comuna" required />
-                        <div class="invalid-feedback">Ingrese la comuna.</div>
                     </div>
                     <div class="col-6">
                         <input type="text" id="telefono" class="form-control" placeholder="Teléfono" />
-                        <div class="invalid-feedback">Ingrese un teléfono válido (opcional).</div>
                     </div>
                     <div class="col-6">
                         <input type="email" id="correo" class="form-control" placeholder="Correo" />
-                        <div class="invalid-feedback">Ingrese un correo válido (opcional).</div>
                     </div>
                     <div class="col-6">
                         <input type="text" id="numeroDocumento" class="form-control" placeholder="N° Documento" required />
-                        <div class="invalid-feedback">Ingrese el número de documento.</div>
                     </div>
                     <div class="col-6">
                         <select id="tipoDocumento" class="form-select" required>
@@ -78,7 +68,6 @@
                             <option value="Pasaporte">Pasaporte</option>
                             <option value="Otro">Otro</option>
                         </select>
-                        <div class="invalid-feedback">Seleccione un tipo de documento.</div>
                     </div>
                 </div>
 
@@ -117,9 +106,9 @@
 
 <footer class="navbar navbar-expand-lg navbar-dark bg-primary mt-auto">
     <div class="container justify-content-center">
-            <span class="navbar-text text-white">
-                &copy; 2025 Farmacéutica - Todos los derechos reservados
-            </span>
+        <span class="navbar-text text-white">
+            &copy; 2025 Farmacéutica - Todos los derechos reservados
+        </span>
     </div>
 </footer>
 
@@ -130,30 +119,30 @@
         const beneficiarios = await res.json();
 
         let html = `<table class="table table-striped"><thead>
-            <tr>
-                <th>RUT</th><th>Nombre</th><th>Apellido</th><th>Fecha Nac.</th>
-                <th>Sexo</th><th>Dirección</th><th>Comuna</th><th>Teléfono</th>
-                <th>Correo</th><th>Tipo Doc</th><th>N° Doc</th><th>Acciones</th>
-            </tr></thead><tbody>`;
+        <tr>
+            <th>RUT</th><th>Nombre</th><th>Apellido</th><th>Fecha Nac.</th>
+            <th>Sexo</th><th>Dirección</th><th>Comuna</th><th>Teléfono</th>
+            <th>Correo</th><th>Tipo Doc</th><th>N° Doc</th><th>Acciones</th>
+        </tr></thead><tbody>`;
 
         for (const b of beneficiarios) {
             html += `<tr>
-                    <td>${b.rut}</td>
-                    <td>${b.nombre}</td>
-                    <td>${b.apellido}</td>
-                    <td>${b.fechaNacimiento || ''}</td>
-                    <td>${b.sexo || ''}</td>
-                    <td>${b.direccion || ''}</td>
-                    <td>${b.comuna || ''}</td>
-                    <td>${b.telefono || ''}</td>
-                    <td>${b.correo || ''}</td>
-                    <td>${b.tipoDocumento || ''}</td>
-                    <td>${b.numeroDocumento || ''}</td>
-                    <td>
-                        <button class="btn btn-info btn-sm" onclick="verHistorial('${b.rut}')">Historial</button>
-                        <button class="btn btn-danger btn-sm" onclick="eliminarBeneficiario('${b.rut}')">Eliminar</button>
-                    </td>
-                </tr>`;
+                <td>${b.rut}</td>
+                <td>${b.nombre}</td>
+                <td>${b.apellido}</td>
+                <td>${b.fechaNacimiento || ''}</td>
+                <td>${b.sexo || ''}</td>
+                <td>${b.direccion || ''}</td>
+                <td>${b.comuna || ''}</td>
+                <td>${b.telefono || ''}</td>
+                <td>${b.correo || ''}</td>
+                <td>${b.tipoDocumento || ''}</td>
+                <td>${b.numeroDocumento || ''}</td>
+                <td>
+                    <button class="btn btn-info btn-sm" onclick="verHistorial('${b.rut}')">Historial</button>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarBeneficiario('${b.rut}')">Eliminar</button>
+                </td>
+            </tr>`;
         }
         html += "</tbody></table>";
         document.getElementById("tablaBeneficiarios").innerHTML = html;
@@ -167,110 +156,30 @@
         el.className = `alert ${color === 'green' ? 'alert-success' : 'alert-danger'}`;
     }
 
-    // Validación y envío del formulario
+    // Registrar beneficiario
     document.getElementById("formBeneficiario").addEventListener("submit", async function (e) {
         e.preventDefault();
-        const form = this;
-
-        // Limpiar estilos previos
-        [...form.elements].forEach(el => {
-            el.classList.remove('is-invalid');
-        });
-
-        let valido = true;
-
-        // Validar RUT chileno simple (sin puntos ni guión)
-        function validarRut(rut) {
-            const re = /^\d{7,8}-[0-9kK]$/;
-            return re.test(rut);
-        }
-
-        const rut = form.rut.value.trim();
-        if (!validarRut(rut)) {
-            form.rut.classList.add('is-invalid');
-            valido = false;
-        }
-
-        if (!form.nombre.value.trim()) {
-            form.nombre.classList.add('is-invalid');
-            valido = false;
-        }
-        if (!form.apellido.value.trim()) {
-            form.apellido.classList.add('is-invalid');
-            valido = false;
-        }
-
-        const fecha = form.fechaNacimiento.value;
-        if (!fecha || new Date(fecha) > new Date()) {
-            form.fechaNacimiento.classList.add('is-invalid');
-            valido = false;
-        }
-
-        if (!form.sexo.value) {
-            form.sexo.classList.add('is-invalid');
-            valido = false;
-        }
-
-        if (!form.direccion.value.trim()) {
-            form.direccion.classList.add('is-invalid');
-            valido = false;
-        }
-        if (!form.comuna.value.trim()) {
-            form.comuna.classList.add('is-invalid');
-            valido = false;
-        }
-
-        const tel = form.telefono.value.trim();
-        if (tel && !/^\d{7,15}$/.test(tel)) {
-            form.telefono.classList.add('is-invalid');
-            valido = false;
-        }
-
-        const correo = form.correo.value.trim();
-        if (correo && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
-            form.correo.classList.add('is-invalid');
-            valido = false;
-        }
-
-        if (!form.numeroDocumento.value.trim()) {
-            form.numeroDocumento.classList.add('is-invalid');
-            valido = false;
-        }
-
-        if (!form.tipoDocumento.value) {
-            form.tipoDocumento.classList.add('is-invalid');
-            valido = false;
-        }
-
-        if (!valido) {
-            mostrarMensaje("Por favor corrige los errores en el formulario", "red");
-            return;
-        }
-
-        // Enviar datos al backend
         const data = {
-            rut: rut,
-            nombre: form.nombre.value.trim(),
-            apellido: form.apellido.value.trim(),
-            fechaNacimiento: fecha,
-            sexo: form.sexo.value,
-            direccion: form.direccion.value.trim(),
-            comuna: form.comuna.value.trim(),
-            telefono: tel,
-            correo: correo,
-            numeroDocumento: form.numeroDocumento.value.trim(),
-            tipoDocumento: form.tipoDocumento.value
+            rut: document.getElementById("rut").value,
+            nombre: document.getElementById("nombre").value,
+            apellido: document.getElementById("apellido").value,
+            fechaNacimiento: document.getElementById("fechaNacimiento").value,
+            sexo: document.getElementById("sexo").value,
+            direccion: document.getElementById("direccion").value,
+            comuna: document.getElementById("comuna").value,
+            telefono: document.getElementById("telefono").value,
+            correo: document.getElementById("correo").value,
+            numeroDocumento: document.getElementById("numeroDocumento").value,
+            tipoDocumento: document.getElementById("tipoDocumento").value
         };
-
         const res = await fetch("/api/beneficiarios", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
         });
-
         if (res.ok) {
             mostrarMensaje("Beneficiario registrado exitosamente", "green");
-            form.reset();
+            this.reset();
             cargarBeneficiarios();
         } else {
             mostrarMensaje("Error al registrar beneficiario", "red");
@@ -298,14 +207,14 @@
             html = "<p>No hay historial para este beneficiario.</p>";
         } else {
             html = `<table class="table"><thead>
-                <tr><th>ID</th><th>Datos</th><th>Fecha Registro</th></tr>
-                </thead><tbody>`;
+            <tr><th>ID</th><th>Datos</th><th>Fecha Registro</th></tr>
+            </thead><tbody>`;
             for (const h of historial) {
                 html += `<tr>
-                        <td>${h.id}</td>
-                        <td>${h.datosHistorial || ''}</td>
-                        <td>${h.fechaRegistro || ''}</td>
-                    </tr>`;
+                    <td>${h.id}</td>
+                    <td>${h.datosHistorial || ''}</td>
+                    <td>${h.fechaRegistro || ''}</td>
+                </tr>`;
             }
             html += "</tbody></table>";
         }
@@ -365,6 +274,7 @@
 
             let errores = 0, creados = 0, actualizados = 0;
 
+            // Obtener beneficiarios existentes para detectar actualizaciones
             let beneficiariosExistentes = [];
             try {
                 const res = await fetch('/api/beneficiarios');
