@@ -19,8 +19,7 @@ public class Rol {
     @Column(length = 255)
     private String descripcion;
 
-    @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Usuario> usuarios = new ArrayList<>();
+
 
     public Rol() {}
 
@@ -28,7 +27,6 @@ public class Rol {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.usuarios.add(usuario);
     }
 
     public Long getId() {
@@ -55,11 +53,4 @@ public class Rol {
         this.descripcion = descripcion;
     }
 
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
 }
