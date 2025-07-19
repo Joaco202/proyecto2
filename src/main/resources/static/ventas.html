@@ -20,6 +20,9 @@
         <div id="mensaje" class="alert css-alert" style="display:none;"></div>
         <form id="formVenta" class="mb-4">
             <div class="row align-items-end">
+                <!-- Producto y lote ocultos, solo selecciona producto para mostrar nombre y precio -->
+                <input type="hidden" id="producto_id" />
+                <input type="hidden" id="lote_id" />
                 <div class="col">
                     <label for="producto" class="form-label">Producto</label>
                     <select id="producto" class="form-select" required>
@@ -50,7 +53,6 @@
             <button type="submit" class="btn btn-primary css-btn mt-3">Registrar Venta</button>
             <a href="listaventas.html" class="btn btn-secondary css-btn mt-3 ms-2">Lista Ventas</a>
         </form>
-        <div id="tablaElementosVenta"></div>
     </div>
 
     <script>
@@ -77,39 +79,13 @@
             document.getElementById("montoTotal").value = total.toFixed(2);
         }
 
-        document.getElementById("producto").addEventListener("change", calcularMontoTotal);
+        document.getElementById("producto").addEventListener("change", function() {
+            calcularMontoTotal();
+            // Set producto_id oculto
+            document.getElementById("producto_id").value = this.value;
+        });
         document.getElementById("cantidad").addEventListener("input", calcularMontoTotal);
         document.getElementById("descuento").addEventListener("change", calcularMontoTotal);
-
-        async function cargarElementosVenta() {
-            const res = await fetch("/api/elementos-venta");
-            const elementos = await res.json();
-            let html = `<table class="table table-striped"><thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Precio Unitario</th>
-                    <th>Descuento</th>
-                    <th>Monto Total</th>
-                    <th>Acciones</th>
-                </tr></thead><tbody>`;
-            for (const ev of elementos) {
-                html += `<tr>
-                    <td>${ev.id}</td>
-                    <td>${ev.producto ? ev.producto.nombre : ''}</td>
-                    <td>${ev.cantidad || ''}</td>
-                    <td>${ev.precio || ''}</td>
-                    <td>${ev.descuento || '0'}%</td>
-                    <td>${ev.cantidad && ev.precio ? (ev.cantidad * ev.precio * (1 - (ev.descuento || 0)/100)).toFixed(2) : ''}</td>
-                    <td>
-                        <button class="btn btn-danger btn-sm" onclick="eliminarElementoVenta('${ev.id}')">Eliminar</button>
-                    </td>
-                </tr>`;
-            }
-            html += "</tbody></table>";
-            document.getElementById("tablaElementosVenta").innerHTML = html;
-        }
 
         document.getElementById("formVenta").addEventListener("submit", async function(e) {
             e.preventDefault();
@@ -118,6 +94,8 @@
             const descuento = document.getElementById("descuento").value;
             const producto = productos.find(p => p.id == productoId);
             const precio = producto ? producto.precio : 0;
+            // lote_id y producto_id ocultos, no modificables por el usuario
+            const loteId = document.getElementById("lote_id").value || null;
 
             if (!productoId || !cantidad) {
                 mostrarMensaje("Selecciona producto y cantidad", "red");
@@ -128,8 +106,8 @@
                 producto: { id: productoId },
                 cantidad: cantidad,
                 precio: precio,
-                descuento: descuento
-                // venta, lote, etc. pueden ser agregados según tu modelo/backend
+                descuento: descuento,
+                lote: loteId ? { id: loteId } : undefined // solo si tu modelo lo requiere
             };
 
             const res = await fetch("/api/elementos-venta", {
@@ -141,22 +119,10 @@
                 mostrarMensaje("Elemento de venta registrado exitosamente", "green");
                 this.reset();
                 document.getElementById("montoTotal").value = "";
-                cargarElementosVenta();
             } else {
                 mostrarMensaje("Error al registrar elemento de venta", "red");
             }
         });
-
-        async function eliminarElementoVenta(id) {
-            if (!confirm("¿Seguro que deseas eliminar este elemento de venta?")) return;
-            const res = await fetch(`/api/elementos-venta/${id}`, { method: "DELETE" });
-            if (res.ok) {
-                mostrarMensaje("Elemento de venta eliminado", "green");
-                cargarElementosVenta();
-            } else {
-                mostrarMensaje("Error al eliminar elemento de venta", "red");
-            }
-        }
 
         function mostrarMensaje(msg, color) {
             const el = document.getElementById("mensaje");
@@ -166,7 +132,5 @@
         }
 
         cargarProductos();
-        cargarElementosVenta();
     </script>
 </body>
-</html>
