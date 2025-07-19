@@ -53,7 +53,7 @@
 
     async function cargarRoles() {
         try {
-            const res = await fetch("http://localhost:8080/api/roles");
+            const res = await fetch("http://34.60.57.182/api/roles");
             const roles = await res.json();
 
             const select = document.getElementById("rol");
