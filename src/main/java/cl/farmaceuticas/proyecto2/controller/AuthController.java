@@ -1,34 +1,45 @@
-package cl.farmaceuticas.proyecto2.controller;
+package cl.farmaceuticas.proyecto2.service;
 
-import cl.farmaceuticas.proyecto2.service.AuthService;
+import cl.farmaceuticas.proyecto2.model.Rol;
+import cl.farmaceuticas.proyecto2.model.Usuario;
+import cl.farmaceuticas.proyecto2.repository.UsuarioRepository;
+import cl.farmaceuticas.proyecto2.repository.RolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.util.Optional;
 
-@RestController
-@RequestMapping("/api")
-public class AuthController {
+@Service
+public class AuthService {
 
     @Autowired
-    private AuthService authService;
+    private UsuarioRepository usuarioRepository;
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Map<String, String> body) {
-        var resultado = authService.registrar(
-                body.get("usuario"),
-                body.get("claveHash"),
-                body.get("nombre"),
-                body.get("apellido"),
-                body.get("correo"),
-                body.get("rol")
-        );
+    @Autowired
+    private RolRepository rolRepository;
 
-        if (resultado.isPresent()) {
-            return ResponseEntity.ok(Map.of("mensaje", "Usuario registrado con éxito"));
-        } else {
-            return ResponseEntity.badRequest().body(Map.of("error", "No se pudo registrar el usuario (verifica si ya existe o si el rol es válido)"));
+    public Optional<Usuario> registrar(String usuario, String claveHash, String nombre, String apellido, String correo, String rolNombre) {
+        // Verificar si el usuario ya existe
+        if (usuarioRepository.existsByUsuario(usuario)) {
+            return Optional.empty(); // Usuario ya existe
         }
+
+        // Buscar el rol por nombre
+        Rol rol = rolRepository.findByNombre(rolNombre);
+        if (rol == null) {
+            return Optional.empty(); // Rol no encontrado
+        }
+
+        // Crear y guardar el nuevo usuario
+        Usuario nuevoUsuario = new Usuario();
+        nuevoUsuario.setUsuario(usuario);
+        nuevoUsuario.setClaveHash(claveHash);
+        nuevoUsuario.setNombre(nombre);
+        nuevoUsuario.setApellido(apellido);
+        nuevoUsuario.setCorreo(correo);
+        nuevoUsuario.setRol(rol);
+
+        Usuario guardado = usuarioRepository.save(nuevoUsuario);
+        return Optional.of(guardado);
     }
 }
