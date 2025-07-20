@@ -1,4 +1,4 @@
-package cl.farmaceuticas.proyecto2.service;
+package cl.farmaceuticas.proyecto2.controller;
 
 import cl.farmaceuticas.proyecto2.model.Rol;
 import cl.farmaceuticas.proyecto2.model.Usuario;
