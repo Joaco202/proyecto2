@@ -28,7 +28,6 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login.html")
-                        .loginProcessingUrl("/login.html") // Solo si tu form.html POSTea a /autenticar
                         .defaultSuccessUrl("/registro.html", true)
                         .permitAll()
                 )
