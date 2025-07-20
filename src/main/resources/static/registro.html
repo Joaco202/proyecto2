@@ -55,7 +55,7 @@
         }
     }
 
-    async function cargarRoles() {
+async function cargarRoles() {
         try {
             const res = await fetch("http://34.60.57.182/api/roles");
             const roles = await res.json();
@@ -88,13 +88,14 @@
             return;
         }
 
+        // Cambia aquí: rol debe ser un objeto { id: ... }
         const data = {
             usuario: usuario,
             claveHash: clave,
             nombre: document.getElementById("nombre").value.trim(),
             apellido: document.getElementById("apellido").value.trim(),
             correo: document.getElementById("correo").value.trim(),
-            rol: document.getElementById("rol").options[document.getElementById("rol").selectedIndex].text
+            rol: { id: parseInt(rolId) }
         };
 
         try {
@@ -105,14 +106,14 @@
             });
 
             if (!res.ok) {
-                const texto = await res.text();  // cambia de res.json() a res.text()
+                const texto = await res.text();
                 mensajeEl.style.color = "red";
                 mensajeEl.textContent = "Error al registrar usuario: " + texto;
                 console.error("Error al registrar usuario:", texto);
                 return;
             }
 
-            const result = await res.json(); // solo si res.ok es true
+            const result = await res.json();
             mensajeEl.style.color = "green";
             mensajeEl.textContent = result.mensaje || "Registro exitoso.";
             document.querySelectorAll("input, select").forEach(input => input.value = "");
