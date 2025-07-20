@@ -35,7 +35,17 @@
             </div>
             <button type="submit" class="btn btn-primary css-btn mt-3">Registrar Compra</button>
         </form>
-        <button type="button" class="btn btn-info mt-3" id="verElementosBtn" style="display:none;">Ver Elementos de Compra</button>
+
+        <!-- Sección para agregar productos a la compra -->
+        <div id="productosSection" style="display:none;">
+            <h3 class="css-title2">Agregar Productos a la Compra</h3>
+            <form id="formElementosCompra" class="mb-4">
+                <div id="productosContainer"></div>
+                <button type="button" class="btn btn-secondary mb-2" id="addProductoBtn">Agregar Producto</button>
+                <button type="submit" class="btn btn-success css-btn mt-3">Registrar Productos</button>
+            </form>
+            <button type="button" class="btn btn-info mt-3" id="verElementosBtn">Ver Elementos de Compra</button>
+        </div>
     </div>
 
     <script>
@@ -47,7 +57,6 @@
             const data = {
                 proveedor: document.getElementById("proveedor").value,
                 estado: document.getElementById("estado").value
-                // fecha y numeroCompra se generan en backend
             };
 
             const res = await fetch("/api/compras", {
@@ -59,11 +68,85 @@
             if (res.ok) {
                 const compra = await res.json();
                 compraId = compra.id;
-                mostrarMensaje("Compra registrada correctamente.", "green");
-                document.getElementById("verElementosBtn").style.display = "block";
+                mostrarMensaje("Compra registrada correctamente.", "success");
+                document.getElementById("productosSection").style.display = "block";
+                document.getElementById("formCompra").reset();
+                document.getElementById("productosContainer").innerHTML = "";
+                document.getElementById("productosContainer").appendChild(crearProductoRow());
             } else {
-                mostrarMensaje("Error al registrar compra.", "red");
+                mostrarMensaje("Error al registrar compra.", "danger");
             }
+        });
+
+        function crearProductoRow() {
+            const row = document.createElement("div");
+            row.className = "row align-items-end producto-row mb-2";
+            row.innerHTML = `
+                <div class="col">
+                    <label class="form-label">Lote</label>
+                    <input type="text" class="form-control lote" placeholder="Lote" required>
+                </div>
+                <div class="col">
+                    <label class="form-label">Producto</label>
+                    <input type="text" class="form-control producto" placeholder="Producto" required>
+                </div>
+                <div class="col">
+                    <label class="form-label">Cantidad</label>
+                    <input type="number" class="form-control cantidad" min="1" placeholder="Cantidad" required>
+                </div>
+                <div class="col">
+                    <label class="form-label">Precio Unitario</label>
+                    <input type="number" class="form-control precio" min="0" step="0.01" placeholder="Precio" required>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-danger btn-sm remove-producto" style="margin-top:32px;">X</button>
+                </div>
+            `;
+            row.querySelector('.remove-producto').addEventListener('click', () => row.remove());
+            return row;
+        }
+
+        document.getElementById("addProductoBtn").addEventListener("click", function() {
+            document.getElementById("productosContainer").appendChild(crearProductoRow());
+        });
+
+        document.getElementById("formElementosCompra").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            if (!compraId) {
+                mostrarMensaje("Primero registre la compra.", "danger");
+                return;
+            }
+            const filas = document.querySelectorAll('.producto-row');
+            for (const row of filas) {
+                const lote = row.querySelector('.lote').value.trim();
+                const producto = row.querySelector('.producto').value.trim();
+                const cantidad = row.querySelector('.cantidad').value;
+                const precio = row.querySelector('.precio').value;
+                if (!lote || !producto || !cantidad || !precio) {
+                    mostrarMensaje("Completa todos los campos de productos.", "danger");
+                    return;
+                }
+                const data = {
+                    compra: { id: compraId },
+                    lote: { id: lote }, // Si tu backend espera el id, ingresa el id aquí
+                    producto: { id: producto }, // Si tu backend espera el id, ingresa el id aquí
+                    cantidad: cantidad,
+                    precio: precio
+                };
+                const res = await fetch("/api/elementos-compra", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+                if (!res.ok) {
+                    mostrarMensaje("Error al agregar producto", "danger");
+                    return;
+                }
+            }
+            mostrarMensaje("Productos agregados a la compra", "success");
+            this.reset();
+            document.getElementById("productosContainer").innerHTML = "";
+            document.getElementById("productosContainer").appendChild(crearProductoRow());
         });
 
         document.getElementById("verElementosBtn").addEventListener("click", function() {
@@ -72,11 +155,11 @@
             }
         });
 
-        function mostrarMensaje(msg, color) {
+        function mostrarMensaje(msg, tipo) {
             const el = document.getElementById("mensaje");
             el.textContent = msg;
             el.style.display = msg ? "block" : "none";
-            el.style.color = color || "black";
+            el.className = `alert alert-${tipo}`;
         }
     </script>
 </body>
