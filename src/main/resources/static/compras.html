@@ -25,16 +25,6 @@
                     <input type="text" id="proveedor" class="form-control" placeholder="Proveedor" required>
                 </div>
                 <div class="col">
-                    <label for="numeroCompra" class="form-label">N° Compra</label>
-                    <input type="text" id="numeroCompra" class="form-control" placeholder="Número de Compra" required>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col">
-                    <label for="fecha" class="form-label">Fecha</label>
-                    <input type="date" id="fecha" class="form-control" required>
-                </div>
-                <div class="col">
                     <label for="estado" class="form-label">Estado</label>
                     <select id="estado" class="form-select">
                         <option value="Pendiente">Pendiente</option>
@@ -45,157 +35,41 @@
             </div>
             <button type="submit" class="btn btn-primary css-btn mt-3">Registrar Compra</button>
         </form>
-
-        <h3 class="css-title2">Agregar Productos a la Compra</h3>
-        <form id="formElementosCompra" class="mb-4">
-            <div id="productosContainer"></div>
-            <button type="button" class="btn btn-secondary mb-2" id="addProductoBtn">Agregar Producto</button>
-            <button type="submit" class="btn btn-success css-btn mt-3">Registrar Productos</button>
-        </form>
-
-        <button type="button" class="btn btn-info mt-3" id="verElementosBtn">Ver Elementos de Compra</button>
+        <button type="button" class="btn btn-info mt-3" id="verElementosBtn" style="display:none;">Ver Elementos de Compra</button>
     </div>
 
     <script>
-        let productos = [];
-        let lotes = [];
-        let compraActualId = null;
-
-        async function cargarProductosYLotes() {
-            // Carga productos
-            const resProd = await fetch("/api/productos");
-            productos = await resProd.json();
-            // Carga lotes
-            const resLotes = await fetch("/api/lotes-producto");
-            lotes = await resLotes.json();
-        }
-
-        function crearProductoRow() {
-            const row = document.createElement("div");
-            row.className = "row align-items-end producto-row mb-2";
-            row.innerHTML = `
-                <div class="col">
-                    <label class="form-label">Lote</label>
-                    <select class="form-select lote" required>
-                        <option value="">Seleccione lote</option>
-                        ${lotes.map(l => `<option value="${l.id}">${l.numeroLote} (${l.producto ? l.producto.nombre : ''})</option>`).join('')}
-                    </select>
-                </div>
-                <div class="col">
-                    <label class="form-label">Producto</label>
-                    <select class="form-select producto" required disabled>
-                        <option value="">Seleccione producto</option>
-                    </select>
-                </div>
-                <div class="col">
-                    <label class="form-label">Cantidad</label>
-                    <input type="number" class="form-control cantidad" min="1" placeholder="Cantidad" required>
-                </div>
-                <div class="col">
-                    <label class="form-label">Precio Unitario</label>
-                    <input type="number" class="form-control precio" min="0" step="0.01" placeholder="Precio" required>
-                </div>
-                <div class="col">
-                    <button type="button" class="btn btn-danger btn-sm remove-producto" style="margin-top:32px;">X</button>
-                </div>
-            `;
-            // Evento para filtrar productos según lote seleccionado
-            row.querySelector('.lote').addEventListener('change', function() {
-                const loteId = this.value;
-                const productoSelect = row.querySelector('.producto');
-                productoSelect.innerHTML = '<option value="">Seleccione producto</option>';
-                if (loteId) {
-                    const lote = lotes.find(l => l.id == loteId);
-                    if (lote && lote.producto) {
-                        productoSelect.innerHTML += `<option value="${lote.producto.id}">${lote.producto.nombre}</option>`;
-                        productoSelect.disabled = false;
-                    } else {
-                        productoSelect.disabled = true;
-                    }
-                } else {
-                    productoSelect.disabled = true;
-                }
-            });
-            row.querySelector('.remove-producto').addEventListener('click', () => row.remove());
-            return row;
-        }
-
-        document.getElementById("addProductoBtn").addEventListener("click", function() {
-            document.getElementById("productosContainer").appendChild(crearProductoRow());
-        });
+        let compraId = null;
 
         document.getElementById("formCompra").addEventListener("submit", async function(e) {
             e.preventDefault();
+
             const data = {
                 proveedor: document.getElementById("proveedor").value,
-                numeroCompra: document.getElementById("numeroCompra").value,
-                fecha: document.getElementById("fecha").value,
                 estado: document.getElementById("estado").value
+                // fecha y numeroCompra se generan en backend
             };
+
             const res = await fetch("/api/compras", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
             });
+
             if (res.ok) {
                 const compra = await res.json();
-                compraActualId = compra.id;
-                mostrarMensaje("Compra registrada. Ahora agregue productos.", "green");
-                document.getElementById("formCompra").reset();
-                document.getElementById("productosContainer").innerHTML = "";
-                // Añade la primera fila de producto
-                document.getElementById("productosContainer").appendChild(crearProductoRow());
+                compraId = compra.id;
+                mostrarMensaje("Compra registrada correctamente.", "green");
+                document.getElementById("verElementosBtn").style.display = "block";
             } else {
-                mostrarMensaje("Error al registrar compra", "red");
+                mostrarMensaje("Error al registrar compra.", "red");
             }
-        });
-
-        document.getElementById("formElementosCompra").addEventListener("submit", async function(e) {
-            e.preventDefault();
-            if (!compraActualId) {
-                mostrarMensaje("Primero registre la compra.", "red");
-                return;
-            }
-            const filas = document.querySelectorAll('.producto-row');
-            for (const row of filas) {
-                const loteId = row.querySelector('.lote').value;
-                const productoId = row.querySelector('.producto').value;
-                const cantidad = row.querySelector('.cantidad').value;
-                const precio = row.querySelector('.precio').value;
-                if (!loteId || !productoId || !cantidad || !precio) {
-                    mostrarMensaje("Completa todos los campos de productos.", "red");
-                    return;
-                }
-                const data = {
-                    compra: { id: compraActualId },
-                    producto: { id: productoId },
-                    lote: { id: loteId },
-                    cantidad: cantidad,
-                    precio: precio
-                };
-                const res = await fetch("/api/elementos-compra", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data)
-                });
-                if (!res.ok) {
-                    mostrarMensaje("Error al agregar producto", "red");
-                    return;
-                }
-            }
-            mostrarMensaje("Productos agregados a la compra", "green");
-            this.reset();
-            document.getElementById("productosContainer").innerHTML = "";
-            document.getElementById("productosContainer").appendChild(crearProductoRow());
         });
 
         document.getElementById("verElementosBtn").addEventListener("click", function() {
-            if (!compraActualId) {
-                mostrarMensaje("Primero registre la compra.", "red");
-                return;
+            if (compraId) {
+                window.location.href = `elementosCompra.html?compraId=${compraId}`;
             }
-            // Redirige a la vista de elementos de compra (ajusta la URL según tu app)
-            window.location.href = `/elementos-compra.html?compraId=${compraActualId}`;
         });
 
         function mostrarMensaje(msg, color) {
@@ -204,11 +78,6 @@
             el.style.display = msg ? "block" : "none";
             el.style.color = color || "black";
         }
-
-        // Inicialización
-        (async () => {
-            await cargarProductosYLotes();
-        })();
     </script>
 </body>
 </html>
