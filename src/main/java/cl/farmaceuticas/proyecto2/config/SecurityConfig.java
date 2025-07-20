@@ -20,20 +20,20 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login.html", "/css/**", "/js/**", "/img/**").permitAll()
+                        .requestMatchers("/login.html", "/menu.html", "/css/**", "/js/**", "/img/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login.html")
-                        .defaultSuccessUrl("/menu.html", true)
+                        .loginPage("/login.html")               // Ruta del login estático
+                        .defaultSuccessUrl("/menu.html", true) // Ruta menú estático después de login
                         .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/login.html?logout")
                         .permitAll()
                 )
-                .csrf(csrf -> csrf.disable()); // ✅ Forma recomendada en Spring Security 6.1+
+                .csrf(csrf -> csrf.disable());  // Deshabilitar CSRF si es necesario
 
         return http.build();
     }
