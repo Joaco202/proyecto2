@@ -47,48 +47,82 @@
         </form>
 
         <h3 class="css-title2">Agregar Productos a la Compra</h3>
-        <form id="formElementoCompra" class="mb-4">
-            <div class="row align-items-end">
-                <div class="col">
-                    <label for="producto" class="form-label">Producto</label>
-                    <select id="producto" class="form-select" required>
-                        <option value="">Seleccione producto</option>
-                    </select>
-                </div>
-                <!-- MODIFICADO: Lote ahora es input de texto -->
-                <div class="col">
-                    <label for="lote" class="form-label">Lote</label>
-                    <input type="text" id="lote" class="form-control" placeholder="Lote" required>
-                </div>
-                <div class="col">
-                    <label for="cantidad" class="form-label">Cantidad</label>
-                    <input type="number" id="cantidad" class="form-control" min="1" placeholder="Cantidad" required>
-                </div>
-                <div class="col">
-                    <label for="precio" class="form-label">Precio Unitario</label>
-                    <input type="number" id="precio" class="form-control" min="0" step="0.01" placeholder="Precio" required>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-success css-btn mt-3">Agregar Producto</button>
+        <form id="formElementosCompra" class="mb-4">
+            <div id="productosContainer"></div>
+            <button type="button" class="btn btn-secondary mb-2" id="addProductoBtn">Agregar Producto</button>
+            <button type="submit" class="btn btn-success css-btn mt-3">Registrar Productos</button>
         </form>
 
-        <h4 class="css-title2">Productos en la Compra</h4>
-        <div id="tablaElementosCompra"></div>
+        <button type="button" class="btn btn-info mt-3" id="verElementosBtn">Ver Elementos de Compra</button>
     </div>
 
     <script>
         let productos = [];
+        let lotes = [];
         let compraActualId = null;
 
-        async function cargarProductos() {
-            const res = await fetch("/api/productos");
-            productos = await res.json();
-            const select = document.getElementById("producto");
-            select.innerHTML = '<option value="">Seleccione producto</option>';
-            productos.forEach(p => {
-                select.innerHTML += `<option value="${p.id}">${p.nombre}</option>`;
-            });
+        async function cargarProductosYLotes() {
+            // Carga productos
+            const resProd = await fetch("/api/productos");
+            productos = await resProd.json();
+            // Carga lotes
+            const resLotes = await fetch("/api/lotes-producto");
+            lotes = await resLotes.json();
         }
+
+        function crearProductoRow() {
+            const row = document.createElement("div");
+            row.className = "row align-items-end producto-row mb-2";
+            row.innerHTML = `
+                <div class="col">
+                    <label class="form-label">Lote</label>
+                    <select class="form-select lote" required>
+                        <option value="">Seleccione lote</option>
+                        ${lotes.map(l => `<option value="${l.id}">${l.numeroLote} (${l.producto ? l.producto.nombre : ''})</option>`).join('')}
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label">Producto</label>
+                    <select class="form-select producto" required disabled>
+                        <option value="">Seleccione producto</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label">Cantidad</label>
+                    <input type="number" class="form-control cantidad" min="1" placeholder="Cantidad" required>
+                </div>
+                <div class="col">
+                    <label class="form-label">Precio Unitario</label>
+                    <input type="number" class="form-control precio" min="0" step="0.01" placeholder="Precio" required>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-danger btn-sm remove-producto" style="margin-top:32px;">X</button>
+                </div>
+            `;
+            // Evento para filtrar productos según lote seleccionado
+            row.querySelector('.lote').addEventListener('change', function() {
+                const loteId = this.value;
+                const productoSelect = row.querySelector('.producto');
+                productoSelect.innerHTML = '<option value="">Seleccione producto</option>';
+                if (loteId) {
+                    const lote = lotes.find(l => l.id == loteId);
+                    if (lote && lote.producto) {
+                        productoSelect.innerHTML += `<option value="${lote.producto.id}">${lote.producto.nombre}</option>`;
+                        productoSelect.disabled = false;
+                    } else {
+                        productoSelect.disabled = true;
+                    }
+                } else {
+                    productoSelect.disabled = true;
+                }
+            });
+            row.querySelector('.remove-producto').addEventListener('click', () => row.remove());
+            return row;
+        }
+
+        document.getElementById("addProductoBtn").addEventListener("click", function() {
+            document.getElementById("productosContainer").appendChild(crearProductoRow());
+        });
 
         document.getElementById("formCompra").addEventListener("submit", async function(e) {
             e.preventDefault();
@@ -108,82 +142,61 @@
                 compraActualId = compra.id;
                 mostrarMensaje("Compra registrada. Ahora agregue productos.", "green");
                 document.getElementById("formCompra").reset();
-                cargarElementosCompra();
+                document.getElementById("productosContainer").innerHTML = "";
+                // Añade la primera fila de producto
+                document.getElementById("productosContainer").appendChild(crearProductoRow());
             } else {
                 mostrarMensaje("Error al registrar compra", "red");
             }
         });
 
-        document.getElementById("formElementoCompra").addEventListener("submit", async function(e) {
+        document.getElementById("formElementosCompra").addEventListener("submit", async function(e) {
             e.preventDefault();
             if (!compraActualId) {
                 mostrarMensaje("Primero registre la compra.", "red");
                 return;
             }
-            const data = {
-                compra: { id: compraActualId },
-                producto: { id: document.getElementById("producto").value },
-                lote: document.getElementById("lote").value, // Ahora es texto
-                cantidad: document.getElementById("cantidad").value,
-                precio: document.getElementById("precio").value
-            };
-            const res = await fetch("/api/elementos-compra", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            });
-            if (res.ok) {
-                mostrarMensaje("Producto agregado a la compra", "green");
-                this.reset();
-                cargarElementosCompra();
-            } else {
-                mostrarMensaje("Error al agregar producto", "red");
+            const filas = document.querySelectorAll('.producto-row');
+            for (const row of filas) {
+                const loteId = row.querySelector('.lote').value;
+                const productoId = row.querySelector('.producto').value;
+                const cantidad = row.querySelector('.cantidad').value;
+                const precio = row.querySelector('.precio').value;
+                if (!loteId || !productoId || !cantidad || !precio) {
+                    mostrarMensaje("Completa todos los campos de productos.", "red");
+                    return;
+                }
+                const data = {
+                    compra: { id: compraActualId },
+                    producto: { id: productoId },
+                    lote: { id: loteId },
+                    cantidad: cantidad,
+                    precio: precio
+                };
+                const res = await fetch("/api/elementos-compra", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+                if (!res.ok) {
+                    mostrarMensaje("Error al agregar producto", "red");
+                    return;
+                }
             }
+            mostrarMensaje("Productos agregados a la compra", "green");
+            this.reset();
+            document.getElementById("productosContainer").innerHTML = "";
+            document.getElementById("productosContainer").appendChild(crearProductoRow());
         });
 
-        async function cargarElementosCompra() {
+        document.getElementById("verElementosBtn").addEventListener("click", function() {
             if (!compraActualId) {
-                document.getElementById("tablaElementosCompra").innerHTML = "<p>Registre una compra para ver los productos.</p>";
+                mostrarMensaje("Primero registre la compra.", "red");
                 return;
             }
-            const res = await fetch(`/api/elementos-compra`);
-            const elementos = await res.json();
-            const elementosDeCompra = elementos.filter(e => e.compra && e.compra.id == compraActualId);
-            let html = `<table class="table table-striped"><thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Lote</th>
-                    <th>Cantidad</th>
-                    <th>Precio Unitario</th>
-                    <th>Subtotal</th>
-                    <th>Acciones</th>
-                </tr></thead><tbody>`;
-            for (const el of elementosDeCompra) {
-                html += `<tr>
-                    <td>${el.producto ? el.producto.nombre : ''}</td>
-                    <td>${el.lote || ''}</td>
-                    <td>${el.cantidad || ''}</td>
-                    <td>${el.precio || ''}</td>
-                    <td>${el.cantidad && el.precio ? (el.cantidad * el.precio).toFixed(2) : ''}</td>
-                    <td>
-                        <button class="btn btn-danger btn-sm" onclick="eliminarElementoCompra('${el.id}')">Eliminar</button>
-                    </td>
-                </tr>`;
-            }
-            html += "</tbody></table>";
-            document.getElementById("tablaElementosCompra").innerHTML = html;
-        }
-
-        async function eliminarElementoCompra(id) {
-            if (!confirm("¿Seguro que deseas eliminar este producto de la compra?")) return;
-            const res = await fetch(`/api/elementos-compra/${id}`, { method: "DELETE" });
-            if (res.ok) {
-                mostrarMensaje("Producto eliminado de la compra", "green");
-                cargarElementosCompra();
-            } else {
-                mostrarMensaje("Error al eliminar producto", "red");
-            }
-        }
+            // Redirige a la vista de elementos de compra (ajusta la URL según tu app)
+            window.location.href = `/elementos-compra.html?compraId=${compraActualId}`;
+        });
 
         function mostrarMensaje(msg, color) {
             const el = document.getElementById("mensaje");
@@ -193,7 +206,9 @@
         }
 
         // Inicialización
-                cargarProductos();
+        (async () => {
+            await cargarProductosYLotes();
+        })();
     </script>
 </body>
 </html>
