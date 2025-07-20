@@ -36,7 +36,7 @@ public class Usuario {
     private LocalDateTime fechaModificacion;
 
     @ManyToOne
-    @JoinColumn(name = "rol_id", insertable = false, updatable = false)
+    @JoinColumn(name = "rol_id")
     private Rol rol;
 
     @OneToMany(mappedBy = "usuario")
