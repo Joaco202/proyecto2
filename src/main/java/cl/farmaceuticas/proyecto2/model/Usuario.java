@@ -28,13 +28,6 @@ public class Usuario {
     @Column(name = "correo", unique = true)
     private String correo;
 
-
-    @Column(name = "fecha_creacion")
-    private LocalDateTime fechaCreacion;
-
-    @Column(name = "fecha_modificacion")
-    private LocalDateTime fechaModificacion;
-
     @ManyToOne
     @JoinColumn(name = "rol_id")
     private Rol rol;
@@ -120,13 +113,6 @@ public class Usuario {
         this.correo = correo;
     }
 
-    public LocalDateTime getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public LocalDateTime getFechaModificacion() {
-        return fechaModificacion;
-    }
 
     public Rol getRol() {
         return rol;
@@ -191,14 +177,6 @@ public class Usuario {
     public void setTransaccionesCaja(List<TransaccionesCaja> transaccionesCaja) {
         this.transaccionesCaja = transaccionesCaja;
     }
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
-    public void setFechaModificacion(LocalDateTime fechaModificacion) {
-        this.fechaModificacion = fechaModificacion;
-    }
-
 
     @Override
     public String toString() {

@@ -15,8 +15,6 @@ CREATE TABLE usuarios (
                           nombre VARCHAR(50),
                           apellido VARCHAR(50),
                           correo VARCHAR(100) UNIQUE,
-                          fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                          fecha_modificacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                           rol_id INT UNSIGNED NULL,
                           FOREIGN KEY (rol_id) REFERENCES roles(id) ON DELETE SET NULL
 ) ENGINE=InnoDB
