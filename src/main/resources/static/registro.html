@@ -94,9 +94,7 @@
             nombre: document.getElementById("nombre").value.trim(),
             apellido: document.getElementById("apellido").value.trim(),
             correo: document.getElementById("correo").value.trim(),
-            rol: {
-                id: parseInt(rolId)
-            }
+            rol: document.getElementById("rol").options[document.getElementById("rol").selectedIndex].text
         };
 
         try {
