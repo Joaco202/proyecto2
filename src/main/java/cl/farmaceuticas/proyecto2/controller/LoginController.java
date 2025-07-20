@@ -12,6 +12,6 @@ public class LoginController {
 
     @GetMapping("/menu")
     public String home() {
-        return "home"; // Página después de loguearse
+        return "menu"; // Página después de loguearse
     }
 }
