@@ -23,12 +23,12 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login.html", "/api/usuarios","/listaventas.html","/registro.html", "/ventas.html", "/compras.html","api/compras", "/api/productos","/api/ventas", "/api/ventas",
-                                "/api/beneficiarios", "/api/elementos-venta","/api/facturas", "/css/**", "/js/**", "/img/**").permitAll()
+                                "/api/beneficiarios", "/api/elementos-venta","/api/facturas","/api/roles","/style.css", "/menu.html","/css/**", "/js/**", "/img/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login.html")
-                        .defaultSuccessUrl("/menu.html", true)
+                        .defaultSuccessUrl("/registro.html", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
