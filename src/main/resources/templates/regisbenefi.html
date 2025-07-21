@@ -101,7 +101,7 @@
     async function cargarMenu() {
         const menuContainer = document.getElementById('menu-container');
         try {
-            const res = await fetch('menu.html');
+            const res = await fetch('menu');
             if (!res.ok) throw new Error('No se pudo cargar el menú');
             const html = await res.text();
             menuContainer.innerHTML = html;

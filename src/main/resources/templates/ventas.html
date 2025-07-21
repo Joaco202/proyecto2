@@ -10,7 +10,7 @@
     <div id="menu-container"></div>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            fetch("menu.html")
+            fetch("menu")
                 .then(res => res.text())
                 .then(html => document.getElementById("menu-container").innerHTML = html);
         });
