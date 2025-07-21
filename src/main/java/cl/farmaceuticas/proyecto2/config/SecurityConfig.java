@@ -23,17 +23,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(auth -> auth
+        http.authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/login", "/style.css", "/css/**", "/js/**", "/img/**"
+                                "/login.html", "/style.css", "/css/**", "/js/**", "/img/**"
 
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login.html") // Idealmente debes tener un @GetMapping("/login") que devuelva una vista login.html
-                        .defaultSuccessUrl("/registro", true)
+                        .defaultSuccessUrl("/registro.html", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
