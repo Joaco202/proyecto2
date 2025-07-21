@@ -37,8 +37,7 @@ public class SecurityConfig {
                 )
                 .csrf(csrf -> csrf.disable());
 
-        // Indicar a Spring Security usar nuestro UserDetailsService
-        http.userDetailsService(userDetailsService);
+
 
         return http.build();
     }
