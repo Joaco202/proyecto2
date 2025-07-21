@@ -1,8 +1,11 @@
 package cl.farmaceuticas.proyecto2.service;
+
 import cl.farmaceuticas.proyecto2.model.Compras;
 import cl.farmaceuticas.proyecto2.repository.ComprasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +32,13 @@ public class ComprasService {
     }
 
     public Compras create(Compras compra) {
+        if (compra.getNumeroCompra() == null) {
+            compra.setNumeroCompra("CMP-" + System.currentTimeMillis());
+        }
+        if (compra.getFecha() == null) {
+            compra.setFecha(LocalDate.now());
+        }
+
         return comprasRepository.save(compra);
     }
 
@@ -48,4 +58,3 @@ public class ComprasService {
         comprasRepository.deleteById(id);
     }
 }
-
