@@ -31,14 +31,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-<<<<<<< HEAD
                         .loginPage("/login") // Idealmente debes tener un @GetMapping("/login") que devuelva una vista login.html
                         .defaultSuccessUrl("/registro", true)
-=======
-                        .loginPage("/login.html")
-                        .loginProcessingUrl("/login.html") // Solo si tu form.html POSTea a /autenticar
-                        .defaultSuccessUrl("/registro.html", true)
->>>>>>> parent of 210b25b (cambios login)
                         .permitAll()
                 )
                 .logout(logout -> logout
