@@ -7,22 +7,118 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="css-body">
-<div id="menu-container"></div>
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        fetch("menu")
-            .then(res => res.text())
-            .then(html => document.getElementById("menu-container").innerHTML = html);
-    });
-</script>
+    <div id="menu-container"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("menu")
+                .then(res => res.text())
+                .then(html => document.getElementById("menu-container").innerHTML = html);
+        });
+    </script>
+    <div class="css-container">
+        <h2 class="css-title2">Crear Nueva Venta</h2>
+        <div id="mensaje" class="alert css-alert" style="display:none;"></div>
+        <form id="formVenta" class="mb-4">
+            <div id="productosContainer">
+                <!-- Aquí se agregan los sets de productos -->
+                <div class="row align-items-end producto-row mb-2">
+                    <div class="col">
+                        <label class="form-label">Producto</label>
+                        <select class="form-select producto" required>
+                            <option value="">Seleccione producto</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Cantidad</label>
+                        <input type="number" class="form-control cantidad" min="1" placeholder="Cantidad" required>
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Descuento (%)</label>
+                        <select class="form-select descuento">
+                            <option value="0">Sin descuento</option>
+                            <option value="5">5%</option>
+                            <option value="10">10%</option>
+                            <option value="15">15%</option>
+                            <option value="20">20%</option>
+                            <option value="25">25%</option>
+                            <option value="30">30%</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Monto Total</label>
+                        <input type="number" class="form-control montoTotal" placeholder="Monto Total" readonly>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-danger btn-sm remove-producto" style="margin-top:32px;display:none;">X</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-end mb-2">
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col">
+                    <label class="form-label">RUT Beneficiario (opcional)</label>
+                    <input type="text" id="rutBeneficiario" class="form-control" placeholder="RUT (opcional)" list="rutList">
+                    <datalist id="rutList"></datalist>
+                </div>
+            </div>
+            <button type="button" class="btn btn-secondary mb-2" id="addProductoBtn">Añadir otro Producto</button>
+            <button type="submit" class="btn btn-primary css-btn mt-3 w-100">Agregar Producto a Venta</button>
+            <a th:href="@{/listaventas}" class="btn btn-secondary css-btn mt-3 w-100">Lista Ventas</a>
+        </form>
+        <button type="button" class="btn btn-success css-btn mt-3" id="finalizarVentaBtn" style="display:none;">Finalizar Venta</button>
+        <button type="button" class="btn btn-warning css-btn mt-3" id="emitirFacturaBtn" style="display:none;">Emitir Factura</button>
+    </div>
 
-<div class="css-container">
-    <h2 class="css-title2">Crear Nueva Venta</h2>
-    <div id="mensaje" class="alert css-alert" style="display:none;"></div>
-    <form id="formVenta" class="mb-4">
-        <div id="productosContainer">
-            <!-- Producto inicial -->
-            <div class="row align-items-end producto-row mb-2">
+    <script>
+        let productos = [];
+        let beneficiarios = [];
+        let ventaActualId = null;
+
+        async function cargarProductos() {
+            const res = await fetch("/api/productos");
+            productos = await res.json();
+            actualizarSelectsProducto();
+        }
+
+        function actualizarSelectsProducto() {
+            document.querySelectorAll('.producto').forEach(select => {
+                const current = select.value;
+                select.innerHTML = '<option value="">Seleccione producto</option>';
+                productos.forEach(p => {
+                    select.innerHTML += `<option value="${p.id}" data-precio="${p.precio || 0}">${p.nombre}</option>`;
+                });
+                select.value = current;
+            });
+        }
+
+        async function cargarBeneficiarios() {
+            const res = await fetch("/api/beneficiarios");
+            beneficiarios = await res.json();
+            const datalist = document.getElementById("rutList");
+            datalist.innerHTML = "";
+            beneficiarios.forEach(b => {
+                datalist.innerHTML += `<option value="${b.rut}">${b.nombre} ${b.apellido}</option>`;
+            });
+        }
+
+        function calcularMontoTotalRow(row) {
+            const productoId = row.querySelector('.producto').value;
+            const cantidad = parseFloat(row.querySelector('.cantidad').value) || 0;
+            const descuento = parseFloat(row.querySelector('.descuento').value) || 0;
+            const producto = productos.find(p => p.id == productoId);
+            const precioUnitario = producto ? (producto.precio || 0) : 0;
+            let total = cantidad * precioUnitario;
+            total = total - (total * descuento / 100);
+            row.querySelector('.montoTotal').value = total.toFixed(2);
+        }
+
+        function addProductoRow() {
+            const container = document.getElementById("productosContainer");
+            const row = document.createElement("div");
+            row.className = "row align-items-end producto-row mb-2";
+            row.innerHTML = `
                 <div class="col">
                     <label class="form-label">Producto</label>
                     <select class="form-select producto" required>
