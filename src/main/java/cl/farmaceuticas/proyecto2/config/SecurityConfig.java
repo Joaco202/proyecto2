@@ -26,13 +26,16 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/login", "/style.css", "/css/**", "/js/**", "/img/**"
-
+                                "/login", "/registro", "/login.html", "/registro.html",
+                                "/listaventas.html", "/ventas.html", "/compras.html", "/menu.html",
+                                "/style.css", "/css/**", "/js/**", "/img/**",
+                                "/api/usuarios", "/api/compras", "/api/productos", "/api/ventas",
+                                "/api/beneficiarios", "/api/elementos-venta", "/api/facturas", "/api/roles"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login.html") // Idealmente debes tener un @GetMapping("/login") que devuelva una vista login.html
+                        .loginPage("/login") // Idealmente debes tener un @GetMapping("/login") que devuelva una vista login.html
                         .defaultSuccessUrl("/registro", true)
                         .permitAll()
                 )
