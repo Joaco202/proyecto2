@@ -132,7 +132,7 @@
 
     async function cargarMenu() {
         try {
-            const res = await fetch('menu');
+            const res = await fetch('menu.html');
             if (!res.ok) throw new Error();
             document.getElementById('menu-container').innerHTML = await res.text();
         } catch {
