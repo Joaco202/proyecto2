@@ -45,35 +45,43 @@
 
 <footer class="navbar navbar-expand-lg navbar-dark bg-primary mt-auto">
     <div class="container justify-content-center">
-    <span class="navbar-text text-white">
-      &copy; 2025 Farmacéutica - Todos los derechos reservados
-    </span>
+        <span class="navbar-text text-white">
+            &copy; 2025 Farmacéutica - Todos los derechos reservados
+        </span>
     </div>
 </footer>
 
 <script>
     async function cargarRoles() {
-        const res = await fetch('/api/roles');
-        const roles = await res.json();
+        try {
+            const res = await fetch('/api/roles');
+            if (!res.ok) throw new Error('Error al cargar roles');
+            const roles = await res.json();
 
-        let html = `<table class="table table-striped"><thead>
-      <tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Acciones</th></tr>
-    </thead><tbody>`;
+            let html = `<table class="table table-striped"><thead>
+                <tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Acciones</th></tr>
+            </thead><tbody>`;
 
-        for (const rol of roles) {
-            html += `<tr>
-        <td>${rol.id}</td>
-        <td>${rol.nombre}</td>
-        <td>${rol.descripcion || ''}</td>
-        <td>
-          <button class="btn btn-warning btn-sm" onclick="editarRol(${rol.id}, '${rol.nombre}', '${rol.descripcion || ''}')">Editar</button>
-          <button class="btn btn-danger btn-sm" onclick="eliminarRol(${rol.id})">Eliminar</button>
-        </td>
-      </tr>`;
+            for (const rol of roles) {
+                // Escape para evitar problemas con comillas en onclick
+                const nombreEsc = rol.nombre.replace(/'/g, "\\'");
+                const descripcionEsc = (rol.descripcion || '').replace(/'/g, "\\'");
+                html += `<tr>
+                    <td>${rol.id}</td>
+                    <td>${rol.nombre}</td>
+                    <td>${rol.descripcion || ''}</td>
+                    <td>
+                      <button class="btn btn-warning btn-sm" onclick="editarRol(${rol.id}, '${nombreEsc}', '${descripcionEsc}')">Editar</button>
+                      <button class="btn btn-danger btn-sm" onclick="eliminarRol(${rol.id})">Eliminar</button>
+                    </td>
+                  </tr>`;
+            }
+
+            html += "</tbody></table>";
+            document.getElementById("tablaRoles").innerHTML = html;
+        } catch (err) {
+            document.getElementById("tablaRoles").innerHTML = `<p class="text-danger">${err.message}</p>`;
         }
-
-        html += "</tbody></table>";
-        document.getElementById("tablaRoles").innerHTML = html;
     }
 
     function mostrarMensaje(msg, tipo = "success") {
@@ -84,30 +92,38 @@
         setTimeout(() => alert.style.display = "none", 4000);
     }
 
-    // Enviar formulario
     document.getElementById("formRol").addEventListener("submit", async function (e) {
         e.preventDefault();
         const id = document.getElementById("idRol").value;
-        const nombre = document.getElementById("nombre").value;
-        const descripcion = document.getElementById("descripcion").value;
+        const nombre = document.getElementById("nombre").value.trim();
+        const descripcion = document.getElementById("descripcion").value.trim();
+
+        if (!nombre) {
+            mostrarMensaje("El nombre es obligatorio", "warning");
+            return;
+        }
 
         const payload = { nombre, descripcion };
         const method = id ? 'PUT' : 'POST';
         const url = id ? `/api/roles/${id}` : '/api/roles';
 
-        const res = await fetch(url, {
-            method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
+        try {
+            const res = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
 
-        if (res.ok) {
-            mostrarMensaje(id ? 'Rol actualizado correctamente' : 'Rol creado con éxito');
-            document.getElementById("formRol").reset();
-            document.getElementById("idRol").value = "";
-            cargarRoles();
-        } else {
-            mostrarMensaje("Error al guardar el rol", "danger");
+            if (res.ok) {
+                mostrarMensaje(id ? 'Rol actualizado correctamente' : 'Rol creado con éxito');
+                this.reset();
+                document.getElementById("idRol").value = "";
+                cargarRoles();
+            } else {
+                mostrarMensaje("Error al guardar el rol", "danger");
+            }
+        } catch {
+            mostrarMensaje("Error de conexión al guardar el rol", "danger");
         }
     });
 
@@ -121,12 +137,16 @@
     async function eliminarRol(id) {
         if (!confirm("¿Seguro que deseas eliminar este rol?")) return;
 
-        const res = await fetch(`/api/roles/${id}`, { method: 'DELETE' });
-        if (res.ok) {
-            mostrarMensaje("Rol eliminado correctamente");
-            cargarRoles();
-        } else {
-            mostrarMensaje("Error al eliminar rol", "danger");
+        try {
+            const res = await fetch(`/api/roles/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                mostrarMensaje("Rol eliminado correctamente");
+                cargarRoles();
+            } else {
+                mostrarMensaje("Error al eliminar rol", "danger");
+            }
+        } catch {
+            mostrarMensaje("Error de conexión al eliminar rol", "danger");
         }
     }
 

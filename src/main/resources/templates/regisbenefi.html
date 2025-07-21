@@ -34,7 +34,7 @@
         .css-container {
             max-width: 600px;
             width: 100%;
-            background-color: rgb(255, 255, 255);
+            background-color: #ffffff;
             padding: 2rem;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -61,7 +61,8 @@
                 </div>
                 <div class="mb-2">
                     <label for="sexo" class="form-label">Sexo</label>
-                    <select id="sexo" class="form-select">
+                    <select id="sexo" class="form-select" required>
+                        <option value="">Seleccione sexo</option>
                         <option value="Masculino">Masculino</option>
                         <option value="Femenino">Femenino</option>
                         <option value="Otro">Otro</option>
@@ -90,9 +91,9 @@
 <!-- Footer fijo abajo -->
 <footer class="navbar navbar-expand-lg navbar-dark bg-primary mt-auto">
     <div class="container justify-content-center">
-            <span class="navbar-text text-white">
-                &copy; 2025 Farmacéutica - Todos los derechos reservados
-            </span>
+        <span class="navbar-text text-white">
+            &copy; 2025 Farmacéutica - Todos los derechos reservados
+        </span>
     </div>
 </footer>
 
