@@ -1,16 +1,13 @@
 package cl.farmaceuticas.proyecto2.config;
-
 import cl.farmaceuticas.proyecto2.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.authentication.AuthenticationProvider;
 
 @Configuration
 public class SecurityConfig {
@@ -25,26 +22,22 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/login", "/registro", "/login.html", "/registro.html",
-                                "/listaventas.html", "/ventas.html", "/compras.html", "/menu.html",
-                                "/style.css", "/css/**", "/js/**", "/img/**",
-                                "/api/usuarios", "/api/compras", "/api/productos", "/api/ventas",
-                                "/api/beneficiarios", "/api/elementos-venta", "/api/facturas", "/api/roles"
-                        ).permitAll()
+                        .requestMatchers("/login.html","/style.css","/css/**", "/js/**", "/img/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login") // Idealmente debes tener un @GetMapping("/login") que devuelva una vista login.html
-                        .defaultSuccessUrl("/registro", true)
+                        .loginPage("/login.html")
+                        .defaultSuccessUrl("/registro.html", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/login.html?logout")
                         .permitAll()
                 )
                 .csrf(csrf -> csrf.disable());
+
+
 
         return http.build();
     }
@@ -54,18 +47,9 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // Define el proveedor de autenticación que usará el servicio personalizado
+    // Para inyectar AuthenticationManager si alguna vez lo necesitas (opcional)
     @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
-    }
-
-    // Registra ese proveedor como el AuthenticationManager principal
-    @Bean
-    public AuthenticationManager authenticationManager() {
-        return new ProviderManager(authenticationProvider());
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 }
