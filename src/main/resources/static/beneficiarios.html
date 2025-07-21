@@ -15,12 +15,11 @@
 <div id="menu-container"></div>
 
 <script>
-    // Este script carga el menú desde una URL como "/menu"
-    fetch('/menu')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('menu-container').innerHTML = data;
-        });
+    document.addEventListener("DOMContentLoaded", () => {
+        fetch("/menu.html")
+            .then(res => res.text())
+            .then(html => document.getElementById("menu-container").innerHTML = html);
+    });
 </script>
 
 <div class="container my-5">
