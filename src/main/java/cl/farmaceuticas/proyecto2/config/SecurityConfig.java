@@ -26,11 +26,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/login", "/registro", "/login.html", "/registro.html",
-                                "/listaventas.html", "/ventas.html", "/compras.html", "/menu.html",
-                                "/style.css", "/css/**", "/js/**", "/img/**",
-                                "/api/usuarios", "/api/compras", "/api/productos", "/api/ventas",
-                                "/api/beneficiarios", "/api/elementos-venta", "/api/facturas", "/api/roles"
+                                "/login", "/style.css", "/css/**", "/js/**", "/img/**"
+                                
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
